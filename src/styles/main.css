@@ -17,6 +17,14 @@
     @apply bg-alternate text-white;
   }
 
+  :focus:not(:focus-visible) {
+    @apply outline-none;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-1 ring-alternate;
+  }
+
   code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
   }
