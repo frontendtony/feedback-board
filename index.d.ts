@@ -6,14 +6,25 @@ declare namespace App {
     upvotes: number;
     status: string;
     description: string;
-    comments?: {
-      id: number;
-      content: string;
-      user: {
-        image: string;
-        name: string;
-        username: string;
-      };
-    }[];
+    comments?: Comment[];
+  }
+
+  interface Comment {
+    id: number;
+    content: string;
+    user: User;
+    replies?: Reply[];
+  }
+
+  interface Reply {
+    content: string;
+    replyingTo: string;
+    user: User;
+  }
+
+  interface User {
+    image: string;
+    name: string;
+    username: string;
   }
 }

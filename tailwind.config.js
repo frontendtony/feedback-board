@@ -42,6 +42,9 @@ module.exports = {
         radial:
           'radial-gradient(ellipse at right top, rgba(232,77,112,1) 0%, rgba(163,55,246,1) 60%, rgba(40,167,237,1) 100%)',
       },
+      divideColor: {
+        light: '#8C92B3',
+      },
       fontSize: {
         regular: '.9375rem', // 15px
         small: '.8125rem', // 13px

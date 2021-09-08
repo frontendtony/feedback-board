@@ -1,0 +1,14 @@
+.reply {
+  position: relative;
+}
+
+.reply:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: -3rem;
+  width: 1px;
+  background-color: #647196;
+  opacity: 0.1;
+}

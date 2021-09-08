@@ -50,8 +50,8 @@
   textarea,
   select,
   .select {
-    @apply px-6 py-3 mt-4 w-full bg-background rounded-input border-none focus:ring-1 focus-visible:ring-1
-    focus:ring-alternate focus-visible:ring-alternate outline-none;
+    @apply px-4 md:px-6 py-3 mt-4 w-full bg-background rounded-input border-none focus:ring-1 focus-visible:ring-1
+    focus:ring-alternate focus-visible:ring-alternate outline-none text-regular;
 
     &[aria-invalid='true']:not(:focus) {
       @apply ring-1 ring-danger;

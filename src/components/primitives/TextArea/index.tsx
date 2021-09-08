@@ -1,8 +1,8 @@
 import * as React from 'react';
 
 interface TextAreaInputProps {
-  id: string;
-  label: string;
+  id?: string;
+  label?: string;
   inputProps?: Omit<React.HTMLProps<HTMLTextAreaElement>, 'value' | 'onChange'>;
   value: string | number;
   onChange: React.ChangeEventHandler<HTMLTextAreaElement>;

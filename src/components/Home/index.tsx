@@ -150,7 +150,9 @@ export default function Home() {
           ) : (
             <ul className="grid gap-3">
               {filteredRequests.map((request) => (
-                <RequestCard key={request.id} request={request} />
+                <Link key={request.id} to={{ pathname: `/${request.id}`, state: request }}>
+                  <RequestCard request={request} />
+                </Link>
               ))}
             </ul>
           )}

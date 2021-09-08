@@ -4,7 +4,7 @@ import CommentBubble from '../icons/CommentBubble';
 
 export default function RequestCard({ request }: { request: App.Request }) {
   return (
-    <li
+    <div
       key={request.id}
       className="rounded p-6 bg-white md:grid grid-cols-3 gap-10"
       style={{ gridTemplateColumns: 'auto 1fr auto' }}
@@ -25,7 +25,7 @@ export default function RequestCard({ request }: { request: App.Request }) {
       <div className="hidden md:block ml-auto self-center">
         <CommentCount count={request.comments?.length ?? 0} />
       </div>
-    </li>
+    </div>
   );
 }
 
