@@ -1,0 +1,7 @@
+.page-container {
+  max-width: 40rem !important;
+}
+
+.decorative-icon {
+  background-image: var(--gradient-pattern);
+}

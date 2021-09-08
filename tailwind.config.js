@@ -16,6 +16,7 @@ module.exports = {
       borderRadius: {
         DEFAULT: '0.625rem',
         button: '0.625rem',
+        input: '.3125rem',
       },
       boxShadow: {
         dropdown: '0px 10px 40px -7px rgba(55, 63, 104, 0.350492)',
@@ -64,5 +65,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms')],
 };
