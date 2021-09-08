@@ -1,0 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap');
+@import './components.css';
+
+@tailwind base;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Jost', sans-serif, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply bg-background min-h-screen text-default;
+  }
+
+  ::selection {
+    @apply bg-alternate text-white;
+  }
+}
