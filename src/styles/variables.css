@@ -1,0 +1,8 @@
+:root {
+  --gradient-pattern: radial-gradient(
+    ellipse at right top,
+    rgba(232, 77, 112, 1) 0%,
+    rgba(163, 55, 246, 1) 60%,
+    rgba(40, 167, 237, 1) 100%
+  );
+}

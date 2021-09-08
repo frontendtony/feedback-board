@@ -1,10 +1,11 @@
 import * as React from 'react';
-import emptyImage from '../assets/empty.png';
-import { productRequests } from '../data.json';
-import '../home.css';
-import FilterOptions from './FilterOptions';
-import RequestCard from './RequestCard';
-import SortOptions from './SortOptions';
+import { Link } from 'react-router-dom';
+import emptyImage from '../../assets/empty.png';
+import { productRequests } from '../../data.json';
+import FilterOptions from '../FilterOptions';
+import RequestCard from '../RequestCard';
+import SortOptions from '../SortOptions';
+import classes from './index.module.css';
 
 export default function Home() {
   const [isMenuVisible, setMenuVisibility] = React.useState(false);
@@ -37,9 +38,9 @@ export default function Home() {
   );
 
   return (
-    <main>
-      <div className="header">
-        <div className="nav">
+    <main className={`${classes.pageContainer} page-container`}>
+      <div className={classes.header}>
+        <div className={classes.nav}>
           <div className="text-white text-left">
             <h1 className="font-bold text-regular md:text-xl">Frontend Mentor</h1>
             <p className="opacity-75 text-small md:text-regular block font-medium">
@@ -62,11 +63,11 @@ export default function Home() {
         </div>
         {/* Menu Dropshadow */}
         <div
-          className={`menu-backdrop ${isMenuVisible ? 'visible' : ''}`}
+          className={`${classes.menuBackdrop} ${isMenuVisible ? classes.visible : ''}`}
           role="button"
           onClick={toggleMenu}
         />
-        <div className={`menu ${isMenuVisible ? 'visible' : ''} bg-background`}>
+        <div className={`${classes.menu} ${isMenuVisible ? classes.visible : ''} bg-background`}>
           <div className="rounded p-6 bg-white">
             <FilterOptions
               options={['All', 'UI', 'UX', 'Enhancement', 'Bug', 'Feature']}
@@ -102,8 +103,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="content-area">
-        <div className="header bg-dark text-white">
+      <div className={classes.contentArea}>
+        <div className={`${classes.contentAreaHeader} bg-dark text-white`}>
           <div className="flex items-center">
             <div className="space-x-2 hidden md:flex items-center mr-[2.375rem]">
               <svg
@@ -131,7 +132,9 @@ export default function Home() {
             <SortOptions />
           </div>
 
-          <button className="btn primary">+ Add Feedback</button>
+          <Link to="/new">
+            <button className="btn primary">+ Add Feedback</button>
+          </Link>
         </div>
 
         <div className="px-6 py-8 md:p-0 md:mt-6 flex flex-col">

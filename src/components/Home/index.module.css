@@ -1,10 +1,6 @@
-main {
+.page-container {
   display: grid;
   grid-template-rows: auto 1fr;
-  width: 100vw;
-  min-height: 100vh;
-  max-width: 1024px;
-  margin: 0 auto;
 
   & > .content-area {
     display: grid;
@@ -12,7 +8,7 @@ main {
     align-self: stretch;
     width: 100%;
 
-    & > .header {
+    & > .content-area-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -29,12 +25,7 @@ main {
       height: 4.5rem;
       width: 100%;
       padding: 0 1.5rem;
-      background-image: radial-gradient(
-        ellipse at right top,
-        rgba(232, 77, 112, 1) 0%,
-        rgba(163, 55, 246, 1) 60%,
-        rgba(40, 167, 237, 1) 100%
-      );
+      background-image: var(--gradient-pattern);
     }
 
     & > .menu-backdrop {
@@ -76,7 +67,7 @@ main {
 }
 
 @media screen and (min-width: 768px) {
-  main {
+  .page-container {
     padding: 3.5rem 2.5rem;
 
     & > .header {
@@ -108,7 +99,7 @@ main {
     }
 
     & > .content-area {
-      & > .header {
+      & > .content-area-header {
         padding: 0.875rem 1.5rem;
         margin-top: 2.5rem;
         border-radius: 0.625rem;
@@ -118,7 +109,7 @@ main {
 }
 
 @media screen and (min-width: 1024px) {
-  main {
+  .page-container {
     grid-template-rows: 1fr;
     grid-template-columns: auto 1fr;
     column-gap: 1.875rem;
@@ -144,7 +135,7 @@ main {
     }
 
     & > .content-area {
-      & > .header {
+      & > .content-area-header {
         margin-top: 0;
       }
     }

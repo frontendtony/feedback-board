@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap');
+@import './variables.css';
+@import './components.css';
+
+@tailwind base;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Jost', sans-serif, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    @apply bg-background min-h-screen text-default;
+  }
+
+  ::selection {
+    @apply bg-alternate text-white;
+  }
+
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
+
+  .page-container {
+    width: 100vw;
+    min-height: 100vh;
+    max-width: 1024px;
+    margin: 0 auto;
+  }
+
+  @media screen and (min-width: 768px) {
+    .page-container {
+      padding: 3.5rem 2.5rem;
+    }
+  }
+
+  [type='text'],
+  [type='email'],
+  [type='url'],
+  [type='password'],
+  [type='number'],
+  [type='date'],
+  [type='datetime-local'],
+  [type='month'],
+  [type='search'],
+  [type='tel'],
+  [type='time'],
+  [type='week'],
+  [multiple],
+  textarea,
+  select,
+  .select {
+    @apply px-6 py-3 mt-4 w-full bg-background rounded-input border-none focus:ring-1 focus-visible:ring-1
+    focus:ring-alternate focus-visible:ring-alternate outline-none;
+
+    &[aria-invalid='true']:not(:focus) {
+      @apply ring-1 ring-danger;
+    }
+  }
+}
