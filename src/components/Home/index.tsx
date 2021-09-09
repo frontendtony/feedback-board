@@ -48,6 +48,7 @@ export default function Home() {
             </p>
           </div>
           <button className="md:hidden" onClick={toggleMenu}>
+            <span className="sr-only">{isMenuVisible ? 'Close Menu' : 'Open Menu'}</span>
             <svg
               width="20"
               height="17"
@@ -67,7 +68,10 @@ export default function Home() {
           role="button"
           onClick={toggleMenu}
         />
-        <div className={`${classes.menu} ${isMenuVisible ? classes.visible : ''} bg-background`}>
+        <div
+          className={`${classes.menu} ${isMenuVisible ? classes.visible : ''} bg-background`}
+          aria-hidden={!isMenuVisible}
+        >
           <div className="rounded p-6 bg-white">
             <FilterOptions
               options={['All', 'UI', 'UX', 'Enhancement', 'Bug', 'Feature']}
@@ -77,9 +81,9 @@ export default function Home() {
           </div>
           <div className="rounded p-6 bg-white">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-bold">Roadmap</h3>
+              <p className="text-lg font-bold">Roadmap</p>
               <a href="/roadmap" className="text-alternate font-semibold text-small">
-                View
+                View <span className="sr-only">Roadmap</span>
               </a>
             </div>
             <div className="mt-6">
@@ -148,13 +152,17 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <ul className="grid gap-3">
+            <div className="grid gap-3" role="list">
               {filteredRequests.map((request) => (
-                <Link key={request.id} to={{ pathname: `/${request.id}`, state: request }}>
+                <Link
+                  key={request.id}
+                  to={{ pathname: `/${request.id}`, state: request }}
+                  role="listitem"
+                >
                   <RequestCard request={request} />
                 </Link>
               ))}
-            </ul>
+            </div>
           )}
         </div>
       </div>
