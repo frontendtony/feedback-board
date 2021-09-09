@@ -101,10 +101,12 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
         </div>
 
         <div className="flex space-x-4 justify-between mt-8">
-          <button className="btn danger" type="button">
-            Delete
-          </button>
-          <div className="flex space-x-4">
+          {feedback && (
+            <button className="btn danger" type="button">
+              Delete
+            </button>
+          )}
+          <div className="flex space-x-4 ml-auto">
             <button
               className="btn secondary"
               type="button"
