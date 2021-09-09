@@ -29,6 +29,23 @@ export default function RequestCard({ request }: { request: App.Request }) {
   );
 }
 
+export function RoadmapRequestCard({ request }: { request: App.Request }) {
+  return (
+    <div key={request.id} className="rounded p-6 bg-white">
+      <div>
+        <p className="font-bold">{request.title}</p>
+        <p className="mt-2 text-light text-small">{request.description}</p>
+        <div className="request-label mt-3">{request.category}</div>
+      </div>
+
+      <div className="flex items-center justify-between mt-4">
+        <Upvotes count={request.upvotes} />
+        <CommentCount count={request.comments?.length ?? 0} />
+      </div>
+    </div>
+  );
+}
+
 function Upvotes(props: { count: number; direction?: 'vertical' | 'horizontal' }) {
   return (
     <button

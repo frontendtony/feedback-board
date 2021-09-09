@@ -65,8 +65,8 @@ export default function Home() {
   const stats = productRequests.reduce(
     (acc, curr) => ({
       planned: acc.planned + (curr.status === 'planned' ? 1 : 0),
-      inProgress: acc.planned + (curr.status === 'in-progress' ? 1 : 0),
-      live: acc.planned + (curr.status === 'live' ? 1 : 0),
+      inProgress: acc.inProgress + (curr.status === 'in-progress' ? 1 : 0),
+      live: acc.live + (curr.status === 'live' ? 1 : 0),
     }),
     { planned: 0, inProgress: 0, live: 0 }
   );
@@ -114,9 +114,9 @@ export default function Home() {
           <div className="rounded p-6 bg-white">
             <div className="flex items-center justify-between">
               <p className="text-lg font-bold">Roadmap</p>
-              <a href="/roadmap" className="text-alternate font-semibold text-small">
+              <Link to="/roadmap" className="text-alternate font-semibold text-small">
                 View <span className="sr-only">Roadmap</span>
-              </a>
+              </Link>
             </div>
             <div className="mt-6">
               <div className="flex items-center mt-2">

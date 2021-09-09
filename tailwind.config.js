@@ -13,6 +13,9 @@ module.exports = {
           live: '#62BCFA',
         },
       },
+      borderColor: {
+        light: '#8C92B3',
+      },
       borderRadius: {
         DEFAULT: '0.625rem',
         button: '0.625rem',
