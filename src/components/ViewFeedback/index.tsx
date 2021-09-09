@@ -16,8 +16,11 @@ export default function ViewFeedback(props: { feedback: App.Request }) {
           <AngleLeft className="text-alternate" />
           <span className="font-bold text-small text-light">Go Back</span>
         </Link>
-        <Link to={`/1/edit`}>
-          <button className="btn alternate">Edit Feedback</button>
+        <Link
+          to={{ pathname: `/${props.feedback.id}/edit`, state: props.feedback }}
+          className="btn alternate"
+        >
+          Edit Feedback
         </Link>
       </div>
 
@@ -60,7 +63,8 @@ function Comment({ comment }: { comment: App.Comment }) {
     <div className="py-6">
       <div className="flex items-center">
         <img
-          src={comment.user.image}
+          // the image string includes a dot(.) which messes with the url
+          src={comment.user.image.substring(1)}
           height={40}
           width={40}
           alt={comment.user.name}
@@ -113,7 +117,8 @@ function Reply({ reply }: { reply: App.Reply }) {
     <div className="pl-6 reply">
       <div className="flex items-center">
         <img
-          src={reply.user.image}
+          // the image string includes a dot(.) which messes with the url
+          src={reply.user.image.substring(1)}
           height={40}
           width={40}
           alt={reply.user.name}
