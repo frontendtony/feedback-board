@@ -34,7 +34,7 @@ export default function Select(props: SelectProps) {
             {value.label}
             <AngleDown className="text-xs" />
           </Listbox.Button>
-          <Listbox.Options className="absolute top-0 overflow-auto bg-white rounded shadow-dropdown max-h-60 focus:outline-none divide-y divide-secondary divide-opacity-10 w-full">
+          <Listbox.Options className="absolute top-0 overflow-auto bg-white rounded shadow-dropdown max-h-60 focus:outline-none divide-y divide-secondary divide-opacity-10 w-full z-10">
             {options.map((option) => (
               <Listbox.Option
                 className={({ active }) =>
