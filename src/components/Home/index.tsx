@@ -58,6 +58,10 @@ export default function Home() {
     setMenuVisibility((current) => !current);
   };
 
+  React.useEffect(() => {
+    setMenuVisibility(false);
+  }, [selectedFilterOption]);
+
   const stats = productRequests.reduce(
     (acc, curr) => ({
       planned: acc.planned + (curr.status === 'planned' ? 1 : 0),
