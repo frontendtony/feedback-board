@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import AngleLeft from '../../icons/AngleLeft';
 import TextArea from '../primitives/TextArea';
 import RequestCard from '../RequestCard';
@@ -7,21 +7,24 @@ import './index.css';
 import classes from './index.module.css';
 
 export default function ViewFeedback(props: { feedback: App.Request }) {
+  const history = useHistory();
   const [comment, setComment] = React.useState('');
 
   return (
     <main className={`page-container px-6 py-8 md:py-14 ${classes.pageContainer}`}>
       <div className="flex items-center justify-between">
-        <Link to="/" className="flex items-center space-x-4">
+        <button onClick={history.goBack} className="flex items-center space-x-4">
           <AngleLeft className="text-alternate" />
           <span className="font-bold text-small text-light">Go Back</span>
-        </Link>
-        <Link
-          to={{ pathname: `/${props.feedback.id}/edit`, state: props.feedback }}
+        </button>
+        <button
+          onClick={() =>
+            history.push({ pathname: `/${props.feedback.id}/edit`, state: props.feedback })
+          }
           className="btn alternate"
         >
           Edit Feedback
-        </Link>
+        </button>
       </div>
 
       <div className="mt-6 md:px-2 md:py-1 bg-white rounded">

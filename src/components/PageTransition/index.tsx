@@ -6,8 +6,8 @@ export default function PageTransition(props: {
   action: 'PUSH' | 'POP' | 'REPLACE';
   key: string;
 }) {
-  const up = '-translate-y-10 opacity-50';
-  const down = 'translate-y-10 opacity-50';
+  const up = '-translate-y-20 opacity-0';
+  const down = 'translate-y-20 opacity-0';
   const center = 'translate-y-0 opacity-100';
   const transition = 'transition-all duration-150';
 

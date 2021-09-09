@@ -1,11 +1,12 @@
 import { Tab } from '@headlessui/react';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { productRequests } from '../../data.json';
 import AngleLeft from '../../icons/AngleLeft';
 import { RoadmapRequestCard } from '../RequestCard';
 
 export default function Roadmap() {
+  const history = useHistory();
   const [selectedTab, setSelectedTab] = React.useState(0);
 
   const requests = React.useMemo(
@@ -29,10 +30,10 @@ export default function Roadmap() {
     <main className="page-container">
       <div className="flex items-center justify-between bg-dark text-white px-6 py-5 md:p-8 md:py-7 md:rounded">
         <div>
-          <Link to="/" className="flex items-center space-x-4 text-white">
+          <button onClick={history.goBack} className="flex items-center space-x-4 text-white">
             <AngleLeft className="text-xs" />
             <span className="font-bold text-sm">Go Back</span>
-          </Link>
+          </button>
           <h1 className="font-bold text-lg mt-2">Roadmap</h1>
         </div>
 

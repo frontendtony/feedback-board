@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import AngleLeft from '../../icons/AngleLeft';
 import Edit from '../../icons/Edit';
 import Plus from '../../icons/Plus';
@@ -38,16 +38,10 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
 
   return (
     <main className={`page-container px-6 py-8 md:py-14 ${classes.pageContainer}`}>
-      <Link
-        to={{
-          pathname: `/${feedback?.id ?? ''}`,
-          ...(feedback && { state: feedback }),
-        }}
-        className="flex items-center space-x-4"
-      >
+      <button onClick={history.goBack} className="flex items-center space-x-4">
         <AngleLeft className="text-alternate" />
         <span className="font-bold text-small text-light">Go Back</span>
-      </Link>
+      </button>
 
       <form className="mt-14 md:mt-16 p-6 md:p-10 bg-white rounded relative w-full">
         <div
@@ -71,6 +65,7 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
             label="Feedback Title"
             hint="Add a short, descriptive headline"
             id="feedback-title"
+            inputProps={{ autoFocus: true }}
           />
           <Select
             value={category}
@@ -100,23 +95,14 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
           />
         </div>
 
-        <div className="flex space-x-4 justify-between mt-8">
+        <div className="flex space-x-4 mobile:space-x-2 justify-between mt-8">
           {feedback && (
             <button className="btn danger" type="button">
               Delete
             </button>
           )}
-          <div className="flex space-x-4 ml-auto">
-            <button
-              className="btn secondary"
-              type="button"
-              onClick={() =>
-                history.push({
-                  pathname: `/${feedback?.id ?? ''}`,
-                  ...(feedback && { state: feedback }),
-                })
-              }
-            >
+          <div className="flex space-x-4 mobile:space-x-2 ml-auto">
+            <button className="btn secondary" type="button" onClick={history.goBack}>
               Cancel
             </button>
             <button className="btn primary" type="submit">
