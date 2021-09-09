@@ -13,7 +13,7 @@ export default function RequestCard({ request }: { request: App.Request }) {
         <Upvotes count={request.upvotes} direction="vertical" />
       </div>
       <div>
-        <h3 className="font-bold">{request.title}</h3>
+        <p className="font-bold">{request.title}</p>
         <p className="mt-2 text-light text-small">{request.description}</p>
         <div className="request-label mt-3">{request.category}</div>
       </div>

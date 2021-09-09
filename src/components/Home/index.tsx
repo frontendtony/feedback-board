@@ -67,11 +67,9 @@ export default function Home() {
           className={`${classes.menuBackdrop} ${isMenuVisible ? classes.visible : ''}`}
           role="button"
           onClick={toggleMenu}
+          aria-hidden
         />
-        <div
-          className={`${classes.menu} ${isMenuVisible ? classes.visible : ''} bg-background`}
-          aria-hidden={!isMenuVisible}
-        >
+        <div className={`${classes.menu} ${isMenuVisible ? classes.visible : ''} bg-background`}>
           <div className="rounded p-6 bg-white">
             <FilterOptions
               options={['All', 'UI', 'UX', 'Enhancement', 'Bug', 'Feature']}
@@ -152,13 +150,9 @@ export default function Home() {
               </p>
             </div>
           ) : (
-            <div className="grid gap-3" role="list">
+            <div className="grid gap-3">
               {filteredRequests.map((request) => (
-                <Link
-                  key={request.id}
-                  to={{ pathname: `/${request.id}`, state: request }}
-                  role="listitem"
-                >
+                <Link key={request.id} to={{ pathname: `/${request.id}`, state: request }}>
                   <RequestCard request={request} />
                 </Link>
               ))}
