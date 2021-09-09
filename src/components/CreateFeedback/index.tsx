@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import AngleLeft from '../../icons/AngleLeft';
+import Edit from '../../icons/Edit';
 import Plus from '../../icons/Plus';
 import Select from '../primitives/Select';
 import TextArea from '../primitives/TextArea';
@@ -14,14 +15,36 @@ const categories = [
   { label: 'UI', value: 'ui' },
   { label: 'UX', value: 'ux' },
 ];
+const statuses = [
+  { label: 'Suggestion', value: 'suggestion' },
+  { label: 'Planned', value: 'planned' },
+  { label: 'In-Progess', value: 'in-progess' },
+  { label: 'Live', value: 'live' },
+];
 
-export default function CreateFeedback() {
-  const [title, setTitle] = React.useState('');
-  const [category, setCategory] = React.useState(categories[0]);
+export default function CreateFeedback({ feedback }: { feedback?: App.Request }) {
+  const history = useHistory();
+
+  const [title, setTitle] = React.useState(feedback?.title ?? '');
+  const [description, setDescription] = React.useState(feedback?.title ?? '');
+  const [category, setCategory] = React.useState(() =>
+    feedback
+      ? categories.find(({ value }) => value === feedback.category) ?? categories[0]
+      : categories[0]
+  );
+  const [status, setStatus] = React.useState(() =>
+    feedback ? statuses.find(({ value }) => value === feedback.status) ?? statuses[0] : statuses[0]
+  );
 
   return (
     <main className={`page-container px-6 py-8 md:py-14 ${classes.pageContainer}`}>
-      <Link to="/" className="flex items-center space-x-4">
+      <Link
+        to={{
+          pathname: `/${feedback?.id ?? ''}`,
+          ...(feedback && { state: feedback }),
+        }}
+        className="flex items-center space-x-4"
+      >
         <AngleLeft className="text-alternate" />
         <span className="font-bold text-small text-light">Go Back</span>
       </Link>
@@ -31,10 +54,16 @@ export default function CreateFeedback() {
           className={`h-10 w-10 md:w-14 md:h-14 rounded-full flex items-center justify-center absolute top-0 -translate-y-1/2 ${classes.decorativeIcon} bg-primary`}
           aria-hidden
         >
-          <Plus className="text-white" />
+          {feedback ? (
+            <Edit className="text-white md:text-2xl" />
+          ) : (
+            <Plus className="text-white mobile:text-small" />
+          )}
         </div>
 
-        <h1 className="text-lg font-bold mt-6">Create New Feedback</h1>
+        <h1 className="text-lg font-bold mt-6">
+          {feedback ? `Editing '${feedback.title}'` : 'Create New Feedback'}
+        </h1>
         <div className="mt-10 space-y-8">
           <TextInput
             value={title}
@@ -51,9 +80,19 @@ export default function CreateFeedback() {
             hint="Choose a category for your feedback"
             id="feedback-category"
           />
+          {feedback && (
+            <Select
+              value={status}
+              onChange={setStatus}
+              options={statuses}
+              label="Category"
+              hint="Choose a category for your feedback"
+              id="feedback-category"
+            />
+          )}
           <TextArea
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             label="Feedback Detail"
             hint="Include any specific comments on what should be improved, added, etc."
             id="feedback-detail"
@@ -61,13 +100,33 @@ export default function CreateFeedback() {
           />
         </div>
 
-        <div className="flex space-x-4 justify-end mt-8">
-          <button className="btn secondary" type="button">
-            Cancel
+        <div className="flex space-x-4 justify-between mt-8">
+          <button className="btn danger" type="button">
+            Delete
           </button>
-          <button className="btn primary" type="submit">
-            Add Feedback
-          </button>
+          <div className="flex space-x-4">
+            <button
+              className="btn secondary"
+              type="button"
+              onClick={() =>
+                history.push({
+                  pathname: `/${feedback?.id ?? ''}`,
+                  ...(feedback && { state: feedback }),
+                })
+              }
+            >
+              Cancel
+            </button>
+            <button className="btn primary" type="submit">
+              {feedback ? (
+                <>
+                  Save<span className="mobile:hidden"> Changes</span>
+                </>
+              ) : (
+                'Add Feedback'
+              )}
+            </button>
+          </div>
         </div>
       </form>
     </main>
