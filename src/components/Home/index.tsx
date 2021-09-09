@@ -132,8 +132,8 @@ export default function Home() {
             <SortOptions />
           </div>
 
-          <Link to="/new">
-            <button className="btn primary">+ Add Feedback</button>
+          <Link to="/new" className="btn primary">
+            + Add Feedback
           </Link>
         </div>
 
