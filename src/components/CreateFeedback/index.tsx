@@ -28,7 +28,7 @@ export default function CreateFeedback() {
 
       <form className="mt-14 md:mt-16 p-6 md:p-10 bg-white rounded relative w-full">
         <div
-          className={`h-10 w-10 md:w-14 md:h-14 rounded-full flex items-center justify-center absolute top-0 -translate-y-1/2 ${classes.decorativeIcon}`}
+          className={`h-10 w-10 md:w-14 md:h-14 rounded-full flex items-center justify-center absolute top-0 -translate-y-1/2 ${classes.decorativeIcon} bg-primary`}
           aria-hidden
         >
           <Plus className="text-white" />

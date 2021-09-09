@@ -7,16 +7,46 @@ import RequestCard from '../RequestCard';
 import SortOptions from '../SortOptions';
 import classes from './index.module.css';
 
+const sortOptions = ['Most Upvotes', 'Least Upvotes', 'Most Comments', 'Least Comments'];
+
 export default function Home() {
   const [isMenuVisible, setMenuVisibility] = React.useState(false);
   const [selectedFilterOption, setSelectedFilterOption] = React.useState('All');
+  const [selectedSortOption, setSelectedSortOption] = React.useState(sortOptions[0]);
 
-  const filteredRequests =
-    selectedFilterOption === 'All'
-      ? productRequests
-      : productRequests.filter(
-          ({ category }) => category.toLowerCase() === selectedFilterOption.toLowerCase()
-        );
+  const filteredRequests = React.useMemo(() => {
+    let result = productRequests;
+
+    if (selectedFilterOption !== 'All') {
+      result = productRequests.filter(
+        ({ category }) => category.toLowerCase() === selectedFilterOption.toLowerCase()
+      );
+    }
+
+    switch (selectedSortOption) {
+      case 'Most Upvotes': {
+        result.sort((a, b) => b.upvotes - a.upvotes);
+        break;
+      }
+      case 'Least Upvotes': {
+        result.sort((a, b) => a.upvotes - b.upvotes);
+        break;
+      }
+      case 'Most Comments': {
+        result.sort((a, b) => Number(b.comments?.length ?? 0) - Number(a.comments?.length ?? 0));
+        break;
+      }
+      case 'Least Comments': {
+        result.sort((a, b) => Number(a.comments?.length ?? 0) - Number(b.comments?.length ?? 0));
+        break;
+      }
+      default: {
+        break;
+      }
+    }
+
+    return result;
+  }, [selectedFilterOption, selectedSortOption]);
 
   const toggleMenu = () => {
     // disable body scroll
@@ -40,7 +70,7 @@ export default function Home() {
   return (
     <main className={`${classes.pageContainer} page-container`}>
       <div className={classes.header}>
-        <div className={classes.nav}>
+        <div className={`${classes.nav} bg-primary`}>
           <div className="text-white text-left">
             <h1 className="font-bold text-regular md:text-xl">Frontend Mentor</h1>
             <p className="opacity-75 text-small md:text-regular block font-medium">
@@ -130,8 +160,11 @@ export default function Home() {
               </svg>
               <p className="font-bold text-lg">{filteredRequests.length} Suggestions</p>
             </div>
-            <span className="text-sm">Sort by&nbsp;:&nbsp;</span>
-            <SortOptions />
+            <SortOptions
+              value={selectedSortOption}
+              onChange={setSelectedSortOption}
+              options={sortOptions}
+            />
           </div>
 
           <Link to="/new" className="btn primary">

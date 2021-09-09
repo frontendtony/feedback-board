@@ -1,39 +1,34 @@
 import { Listbox } from '@headlessui/react';
 import * as React from 'react';
-import { useState } from 'react';
 import AngleDown from '../icons/AngleDown';
 
-const sortOptions = [
-  { label: 'Most Upvotes' },
-  { label: 'Least Upvotes' },
-  { label: 'Most Comments' },
-  { label: 'Least Comments' },
-];
-
-export default function SortOptions() {
-  const [selected, setSelected] = useState(sortOptions[0]);
-
+export default function SortOptions(props: {
+  value: string;
+  onChange(value: string): void;
+  options: string[];
+}) {
   return (
-    <Listbox value={selected} onChange={setSelected}>
+    <Listbox value={props.value} onChange={props.onChange}>
+      <Listbox.Label className="text-sm">Sort by:&nbsp;</Listbox.Label>
       <div className="relative flex items-center">
         <Listbox.Button className="flex items-center">
-          <span className="font-bold text-sm">{selected.label}</span>
+          <span className="font-bold text-sm">{props.value}</span>
           <AngleDown className="text-white ml-2 text-[.5rem]" />
         </Listbox.Button>
         <Listbox.Options className="absolute top-14 overflow-auto bg-white rounded shadow-dropdown max-h-60 focus:outline-none divide-y divide-secondary divide-opacity-10 w-[15.9375rem]">
-          {sortOptions.map((option) => (
+          {props.options.map((option) => (
             <Listbox.Option
               className={({ active }) =>
-                `flex items-center justify-between whitespace-nowrap px-6 py-3 ${
+                `flex items-center justify-between whitespace-nowrap px-6 py-3 cursor-pointer ${
                   active ? 'text-primary' : 'text-default'
                 }`
               }
-              key={option.label}
+              key={option}
               value={option}
             >
               {({ selected }) => (
                 <>
-                  <span>{option.label}</span>
+                  <span>{option}</span>
                   {selected && (
                     <svg
                       width="13"
