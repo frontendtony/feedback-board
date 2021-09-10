@@ -65,7 +65,6 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
             label="Feedback Title"
             hint="Add a short, descriptive headline"
             id="feedback-title"
-            inputProps={{ autoFocus: true }}
           />
           <Select
             value={category}
