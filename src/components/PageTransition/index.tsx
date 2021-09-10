@@ -4,7 +4,7 @@ import * as React from 'react';
 export default function PageTransition(props: {
   children: React.ReactNode;
   action: 'PUSH' | 'POP' | 'REPLACE';
-  key: string;
+  uniqueKey: string;
 }) {
   const up = '-translate-y-20 opacity-0';
   const down = 'translate-y-20 opacity-0';
@@ -15,7 +15,7 @@ export default function PageTransition(props: {
     <Transition
       show
       appear
-      key={props.key}
+      key={props.uniqueKey}
       enter={transition}
       enterFrom={props.action === 'PUSH' ? down : up}
       enterTo={center}
