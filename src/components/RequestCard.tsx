@@ -31,7 +31,16 @@ export default function RequestCard({ request }: { request: App.Request }) {
 
 export function RoadmapRequestCard({ request }: { request: App.Request }) {
   return (
-    <div key={request.id} className="rounded p-6 bg-white">
+    <div
+      key={request.id}
+      className={`rounded p-6 bg-white border-t-[6px] ${
+        request.status === 'planned'
+          ? 'border-status-planned'
+          : request.status === 'in-progress'
+          ? 'border-status-in-progress'
+          : 'border-status-live'
+      }`}
+    >
       <div>
         <p className="font-bold">{request.title}</p>
         <p className="mt-2 text-light text-small">{request.description}</p>

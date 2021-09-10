@@ -7,11 +7,6 @@ module.exports = {
       backgroundColor: {
         dark: '#373F68',
         background: '#F7F8FD',
-        status: {
-          planned: '#F49F85',
-          'in-progress': '#AD1FEA',
-          live: '#62BCFA',
-        },
       },
       borderColor: {
         light: '#8C92B3',
@@ -39,6 +34,11 @@ module.exports = {
         danger: {
           DEFAULT: '#D73737',
           light: '#E98888',
+        },
+        status: {
+          planned: '#F49F85',
+          'in-progress': '#AD1FEA',
+          live: '#62BCFA',
         },
       },
       backgroundImage: {
