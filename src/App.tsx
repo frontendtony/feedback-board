@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { default as CreateFeedback, default as EditFeedback } from './components/CreateFeedback';
 import Home from './components/Home';
+import NotFound from './components/NotFound';
 import PageTransition from './components/PageTransition';
 import Roadmap from './components/Roadmap.tsx';
 import ViewFeedback from './components/ViewFeedback';
@@ -55,6 +56,9 @@ function App() {
               </PageTransition>
             );
           }}
+        </Route>
+        <Route path="*">
+          <NotFound />
         </Route>
       </Switch>
     </Router>
