@@ -24,7 +24,7 @@ function App() {
         <Route exact path="/roadmap">
           {({ location, history }) => {
             return (
-              <PageTransition key={location.key ?? 'new'} action={history.action}>
+              <PageTransition key={location.key ?? 'roadmap'} action={history.action}>
                 <Roadmap />
               </PageTransition>
             );
@@ -33,7 +33,7 @@ function App() {
         <Route exact path="/:id">
           {({ location, history }) => {
             return (
-              <PageTransition key={location.key ?? 'new'} action={history.action}>
+              <PageTransition key={location.key ?? 'view-request'} action={history.action}>
                 <ViewFeedback feedback={location.state as App.Request} />
               </PageTransition>
             );
@@ -42,7 +42,7 @@ function App() {
         <Route exact path="/:id/edit">
           {({ location, history }) => {
             return (
-              <PageTransition key={location.key ?? 'new'} action={history.action}>
+              <PageTransition key={location.key ?? 'edit-request'} action={history.action}>
                 <EditFeedback feedback={location.state as App.Request} />
               </PageTransition>
             );
@@ -51,7 +51,7 @@ function App() {
         <Route exact path="/">
           {({ location, history }) => {
             return (
-              <PageTransition key={location.key ?? 'new'} action={history.action}>
+              <PageTransition key={location.key ?? 'home'} action={history.action}>
                 <Home />
               </PageTransition>
             );
