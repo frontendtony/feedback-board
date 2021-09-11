@@ -25,7 +25,6 @@ const statuses = [
 export default function CreateFeedback({ feedback }: { feedback?: App.Request }) {
   const history = useHistory();
 
-  const [title, setTitle] = React.useState(feedback?.title ?? '');
   const [description, setDescription] = React.useState(feedback?.title ?? '');
   const [category, setCategory] = React.useState(() =>
     feedback
@@ -59,13 +58,7 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
           {feedback ? `Editing '${feedback.title}'` : 'Create New Feedback'}
         </h1>
         <div className="mt-10 space-y-8">
-          <TextInput
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            label="Feedback Title"
-            hint="Add a short, descriptive headline"
-            id="feedback-title"
-          />
+          <TextInput label="Feedback Title" hint="Add a short, descriptive headline" />
           <Select
             value={category}
             onChange={setCategory}

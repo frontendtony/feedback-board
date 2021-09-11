@@ -8,8 +8,11 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.4.1",
+    "@supabase/supabase-js": "^1.22.5",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
+    "react-hook-form": "^7.15.2",
+    "react-hot-toast": "^2.1.1",
     "react-router-dom": "^5.3.0"
   },
   "devDependencies": {
