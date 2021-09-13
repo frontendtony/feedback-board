@@ -13,9 +13,10 @@ declare namespace App {
   interface Comment {
     id: string;
     user_id: string;
-    created_at?: string;
-    updated_at?: string;
-    request_id?: string;
+    created_at: string;
+    updated_at: string;
+    request_id: string;
+    content: string;
   }
 
   interface Reply {
@@ -24,6 +25,7 @@ declare namespace App {
     updated_at?: string;
     content: string;
     comment_id: string;
+    user_id: string;
   }
 
   interface Profile {

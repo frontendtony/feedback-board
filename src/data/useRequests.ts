@@ -7,7 +7,7 @@ export interface RequestReturnType extends App.Request {
 }
 
 export default function useRequests() {
-  const { data, error, mutate } = useSWR(['requests'], fetchRequests);
+  const { data, error, mutate } = useSWR('requests', fetchRequests);
 
   return {
     data,
