@@ -47,7 +47,9 @@ export default function Auth() {
       if (signUpError) throw new Error(signUpError.message);
       const { error: createProfileError } = await supabase
         .from('profiles')
-        .insert([{ id: user?.id, name: values.name }], { returning: 'minimal' });
+        .insert([{ id: user?.id, name: values.name, username: user?.email?.split('@')[0] }], {
+          returning: 'minimal',
+        });
       if (createProfileError) {
         await supabase.from('profiles').delete();
         throw new Error(createProfileError.message);
@@ -102,6 +104,7 @@ export default function Auth() {
                       min: { value: 2, message: 'Enter at least 2 characters' },
                       maxLength: { value: 100, message: 'Nobody has a name that long' },
                     }),
+                    id: 'name',
                     placeholder: 'John Doe',
                   }}
                 />
@@ -117,6 +120,7 @@ export default function Auth() {
                     required: 'Email is required',
                     pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' },
                   }),
+                  id: 'email',
                   type: 'email',
                   placeholder: 'person@example.com',
                 }}
@@ -130,6 +134,7 @@ export default function Auth() {
                     required: 'Password is required',
                     min: { value: 6, message: 'Password is too short' },
                   }),
+                  id: 'password',
                   type: 'password',
                 }}
               />

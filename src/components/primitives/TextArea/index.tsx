@@ -3,9 +3,7 @@ import * as React from 'react';
 interface TextAreaInputProps {
   id?: string;
   label?: string;
-  inputProps?: Omit<React.HTMLProps<HTMLTextAreaElement>, 'value' | 'onChange'>;
-  value: string | number;
-  onChange: React.ChangeEventHandler<HTMLTextAreaElement>;
+  inputProps?: React.HTMLProps<HTMLTextAreaElement>;
   hint?: string;
   isInvalid?: boolean;
   validationMessage?: string;
@@ -18,13 +16,7 @@ export default function TextArea(props: TextAreaInputProps) {
         {props.label}
       </label>
       {props.hint && <p className="mt-[.125rem]">{props.hint}</p>}
-      <textarea
-        {...props.inputProps}
-        id={props.id}
-        value={props.value}
-        onChange={props.onChange}
-        aria-invalid={props.isInvalid}
-      />
+      <textarea {...props.inputProps} id={props.id} aria-invalid={props.isInvalid} />
       {props.isInvalid && props.validationMessage && (
         <p className="text-danger text-sm">{props.validationMessage}</p>
       )}
