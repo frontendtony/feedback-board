@@ -27,19 +27,25 @@ export default function Home() {
 
     switch (selectedSortOption) {
       case 'Most Upvotes': {
-        result?.sort((a, b) => b.upvotes.length - a.upvotes.length);
+        result?.sort((a, b) => b.upvotes_count?.[0].count - a.upvotes_count?.[0].count);
         break;
       }
       case 'Least Upvotes': {
-        result?.sort((a, b) => a.upvotes.length - b.upvotes.length);
+        result?.sort((a, b) => a.upvotes_count?.[0].count - b.upvotes_count?.[0].count);
         break;
       }
       case 'Most Comments': {
-        result?.sort((a, b) => Number(b.comments?.length ?? 0) - Number(a.comments?.length ?? 0));
+        result?.sort(
+          (a, b) =>
+            Number(b.comments_count?.[0].count ?? 0) - Number(a.comments_count?.[0].count ?? 0)
+        );
         break;
       }
       case 'Least Comments': {
-        result?.sort((a, b) => Number(a.comments?.length ?? 0) - Number(b.comments?.length ?? 0));
+        result?.sort(
+          (a, b) =>
+            Number(a.comments_count?.[0].count ?? 0) - Number(b.comments_count?.[0].count ?? 0)
+        );
         break;
       }
       default: {

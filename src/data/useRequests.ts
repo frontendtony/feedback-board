@@ -2,8 +2,8 @@ import useSWR from 'swr';
 import supabase from '../utils/supabase';
 
 export interface RequestReturnType extends App.Request {
-  comments: App.Comment[];
-  upvotes: string[];
+  comments_count: [{ count: number }];
+  upvotes_count: [{ count: number }];
 }
 
 export default function useRequests() {
@@ -20,8 +20,7 @@ export default function useRequests() {
 async function fetchRequests() {
   const { data, error } = await supabase
     .from<RequestReturnType>('requests')
-    .select(`*, comments (*), upvotes (user_id)`);
+    .select(`*, comments_count:comments(count), upvotes_count:upvotes(count)`);
   if (error) throw new Error(error.message);
-  // const { data: comments_count } = await supabase.from('comments').select('*', { count: 'exact' })
   return data;
 }

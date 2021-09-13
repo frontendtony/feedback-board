@@ -11,7 +11,7 @@ export default function RequestCard({ request }: { request: RequestReturnType })
       style={{ gridTemplateColumns: 'auto 1fr auto' }}
     >
       <div className="hidden md:block">
-        <Upvotes count={request.upvotes.length} direction="vertical" />
+        <Upvotes count={request.upvotes_count?.[0].count} direction="vertical" />
       </div>
       <div>
         <p className="font-bold">{request.title}</p>
@@ -20,11 +20,11 @@ export default function RequestCard({ request }: { request: RequestReturnType })
       </div>
 
       <div className="flex items-center justify-between mt-4 md:hidden">
-        <Upvotes count={request.upvotes.length} />
-        <CommentCount count={request.comments?.length ?? 0} />
+        <Upvotes count={request.upvotes_count?.[0].count} />
+        <CommentCount count={request.comments_count?.[0].count ?? 0} />
       </div>
       <div className="hidden md:block ml-auto self-center">
-        <CommentCount count={request.comments?.length ?? 0} />
+        <CommentCount count={request.comments_count?.[0].count ?? 0} />
       </div>
     </div>
   );
@@ -49,8 +49,8 @@ export function RoadmapRequestCard({ request }: { request: RequestReturnType }) 
       </div>
 
       <div className="flex items-center justify-between mt-4">
-        <Upvotes count={request.upvotes.length} />
-        <CommentCount count={request.comments?.length ?? 0} />
+        <Upvotes count={request.upvotes_count?.[0].count} />
+        <CommentCount count={request.comments_count?.[0].count ?? 0} />
       </div>
     </div>
   );
