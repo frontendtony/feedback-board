@@ -93,18 +93,16 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
         </h1>
         <div className="mt-10 space-y-8">
           <TextInput
+            id="title"
             label="Feedback Title"
             hint="Add a short, descriptive headline"
             isInvalid={!!errors.title}
             validationMessage={errors.title?.message}
-            inputProps={{
-              ...register('title', {
-                required: 'Title is required',
-                min: { value: 2, message: 'Enter at least 2 characters' },
-                maxLength: { value: 100, message: 'Title too long (100 max)' },
-              }),
-              id: 'title',
-            }}
+            {...register('title', {
+              required: 'Title is required',
+              min: { value: 2, message: 'Enter at least 2 characters' },
+              maxLength: { value: 100, message: 'Title too long (100 max)' },
+            })}
           />
           <Select
             value={category}
@@ -128,16 +126,14 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
             label="Feedback Detail"
             hint="Include any specific comments on what should be improved, added, etc."
             id="description"
-            inputProps={{
-              ...register('description', {
-                required: 'Description is required',
-                min: { value: 2, message: 'Enter at least 2 characters' },
-                maxLength: { value: 250, message: 'Description too long (250 max)' },
-              }),
-              rows: 3,
-            }}
             isInvalid={!!errors.description}
             validationMessage={errors.description?.message}
+            rows={3}
+            {...register('description', {
+              required: 'Description is required',
+              min: { value: 2, message: 'Enter at least 2 characters' },
+              maxLength: { value: 250, message: 'Description too long (250 max)' },
+            })}
           />
         </div>
 

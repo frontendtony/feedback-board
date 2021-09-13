@@ -95,48 +95,42 @@ export default function Auth() {
             <div className="space-y-4 mt-10">
               {!isLogin && (
                 <TextInput
+                  id="name"
                   label="Full Name"
+                  placeholder="John Doe"
                   isInvalid={!!errors.name}
                   validationMessage={errors.name?.message}
-                  inputProps={{
-                    ...register('name', {
-                      required: 'Name is required',
-                      min: { value: 2, message: 'Enter at least 2 characters' },
-                      maxLength: { value: 100, message: 'Nobody has a name that long' },
-                    }),
-                    id: 'name',
-                    placeholder: 'John Doe',
-                  }}
+                  {...register('name', {
+                    required: 'Name is required',
+                    min: { value: 2, message: 'Enter at least 2 characters' },
+                    maxLength: { value: 100, message: 'Nobody has a name that long' },
+                  })}
                 />
               )}
               <TextInput
+                id="email"
                 label="Email"
+                type="email"
+                placeholder="person@example.com"
                 isInvalid={!!errors.email}
                 validationMessage={
                   errors.email?.message || "It doesn't have to be your real email address"
                 }
-                inputProps={{
-                  ...register('email', {
-                    required: 'Email is required',
-                    pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' },
-                  }),
-                  id: 'email',
-                  type: 'email',
-                  placeholder: 'person@example.com',
-                }}
+                {...register('email', {
+                  required: 'Email is required',
+                  pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' },
+                })}
               />
               <TextInput
+                id="password"
+                type="password"
                 label="Password"
                 isInvalid={!!errors.password}
                 validationMessage={errors.password?.message}
-                inputProps={{
-                  ...register('password', {
-                    required: 'Password is required',
-                    min: { value: 6, message: 'Password is too short' },
-                  }),
-                  id: 'password',
-                  type: 'password',
-                }}
+                {...register('password', {
+                  required: 'Password is required',
+                  min: { value: 6, message: 'Password is too short' },
+                })}
               />
             </div>
             <button className="btn primary w-full h-12 mt-8" type="submit" disabled={isSubmitting}>
