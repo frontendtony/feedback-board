@@ -8,15 +8,16 @@ interface TextInputProps extends React.HTMLProps<HTMLInputElement> {
   validationMessage?: string;
 }
 
-export default function TextInput(props: TextInputProps) {
+export default React.forwardRef<HTMLInputElement, TextInputProps>(function TextInput(props, ref) {
   const { id, label, hint, isInvalid, validationMessage, ...rest } = props;
+
   return (
     <div>
       <label htmlFor={props.id} className="font-bold text-sm">
         {props.label}
       </label>
       {props.hint && <p className="mt-[.125rem]">{props.hint}</p>}
-      <input type="text" {...rest} aria-invalid={props.isInvalid} />
+      <input id={id} type="text" {...rest} aria-invalid={props.isInvalid} ref={ref} />
       {props.validationMessage && (
         <p className={`${props.isInvalid ? 'text-danger' : 'text-light'} text-sm mt-2`}>
           {props.validationMessage}
@@ -24,4 +25,4 @@ export default function TextInput(props: TextInputProps) {
       )}
     </div>
   );
-}
+});
