@@ -1,29 +1,33 @@
 declare namespace App {
   interface Request {
-    id: number;
+    id: string;
+    user_id: string;
+    created_at?: string;
+    updated_at?: string;
     title: string;
     category: string;
-    upvotes: number;
-    status: string;
+    status?: string;
     description: string;
-    comments?: Comment[];
   }
 
   interface Comment {
-    id: number;
-    content: string;
-    user: User;
-    replies?: Reply[];
+    id: string;
+    user_id: string;
+    created_at?: string;
+    updated_at?: string;
+    request_id?: string;
   }
 
   interface Reply {
+    id: string;
+    created_at?: string;
+    updated_at?: string;
     content: string;
-    replyingTo: string;
-    user: User;
+    comment_id: string;
   }
 
-  interface User {
-    image: string;
+  interface Profile {
+    id: string;
     name: string;
     username: string;
   }

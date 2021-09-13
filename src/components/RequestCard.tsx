@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { RequestReturnType } from 'src/data/useRequests';
 import AngleUp from '../icons/AngleUp';
 import CommentBubble from '../icons/CommentBubble';
 
-export default function RequestCard({ request }: { request: App.Request }) {
+export default function RequestCard({ request }: { request: RequestReturnType }) {
   return (
     <div
       key={request.id}
@@ -10,7 +11,7 @@ export default function RequestCard({ request }: { request: App.Request }) {
       style={{ gridTemplateColumns: 'auto 1fr auto' }}
     >
       <div className="hidden md:block">
-        <Upvotes count={request.upvotes} direction="vertical" />
+        <Upvotes count={request.upvotes.length} direction="vertical" />
       </div>
       <div>
         <p className="font-bold">{request.title}</p>
@@ -19,7 +20,7 @@ export default function RequestCard({ request }: { request: App.Request }) {
       </div>
 
       <div className="flex items-center justify-between mt-4 md:hidden">
-        <Upvotes count={request.upvotes} />
+        <Upvotes count={request.upvotes.length} />
         <CommentCount count={request.comments?.length ?? 0} />
       </div>
       <div className="hidden md:block ml-auto self-center">
@@ -29,7 +30,7 @@ export default function RequestCard({ request }: { request: App.Request }) {
   );
 }
 
-export function RoadmapRequestCard({ request }: { request: App.Request }) {
+export function RoadmapRequestCard({ request }: { request: RequestReturnType }) {
   return (
     <div
       key={request.id}
@@ -48,7 +49,7 @@ export function RoadmapRequestCard({ request }: { request: App.Request }) {
       </div>
 
       <div className="flex items-center justify-between mt-4">
-        <Upvotes count={request.upvotes} />
+        <Upvotes count={request.upvotes.length} />
         <CommentCount count={request.comments?.length ?? 0} />
       </div>
     </div>

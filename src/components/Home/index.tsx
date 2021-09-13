@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import useRequests from 'src/data/useRequests';
 import emptyImage from '../../assets/empty.png';
-import { productRequests } from '../../data.json';
 import FilterOptions from '../FilterOptions';
 import RequestCard from '../RequestCard';
 import SortOptions from '../SortOptions';
@@ -14,30 +14,32 @@ export default function Home() {
   const [selectedFilterOption, setSelectedFilterOption] = React.useState('All');
   const [selectedSortOption, setSelectedSortOption] = React.useState(sortOptions[0]);
 
+  const { data: requests, error, loading } = useRequests();
+
   const filteredRequests = React.useMemo(() => {
-    let result = productRequests;
+    let result = requests;
 
     if (selectedFilterOption !== 'All') {
-      result = productRequests.filter(
+      result = requests?.filter(
         ({ category }) => category.toLowerCase() === selectedFilterOption.toLowerCase()
       );
     }
 
     switch (selectedSortOption) {
       case 'Most Upvotes': {
-        result.sort((a, b) => b.upvotes - a.upvotes);
+        result?.sort((a, b) => b.upvotes.length - a.upvotes.length);
         break;
       }
       case 'Least Upvotes': {
-        result.sort((a, b) => a.upvotes - b.upvotes);
+        result?.sort((a, b) => a.upvotes.length - b.upvotes.length);
         break;
       }
       case 'Most Comments': {
-        result.sort((a, b) => Number(b.comments?.length ?? 0) - Number(a.comments?.length ?? 0));
+        result?.sort((a, b) => Number(b.comments?.length ?? 0) - Number(a.comments?.length ?? 0));
         break;
       }
       case 'Least Comments': {
-        result.sort((a, b) => Number(a.comments?.length ?? 0) - Number(b.comments?.length ?? 0));
+        result?.sort((a, b) => Number(a.comments?.length ?? 0) - Number(b.comments?.length ?? 0));
         break;
       }
       default: {
@@ -46,7 +48,7 @@ export default function Home() {
     }
 
     return result;
-  }, [selectedFilterOption, selectedSortOption]);
+  }, [selectedFilterOption, selectedSortOption, loading]);
 
   const toggleMenu = () => {
     // disable body scroll
@@ -62,7 +64,7 @@ export default function Home() {
     setMenuVisibility(false);
   }, [selectedFilterOption]);
 
-  const stats = productRequests.reduce(
+  const stats = requests?.reduce(
     (acc, curr) => ({
       planned: acc.planned + (curr.status === 'planned' ? 1 : 0),
       inProgress: acc.inProgress + (curr.status === 'in-progress' ? 1 : 0),
@@ -122,17 +124,17 @@ export default function Home() {
               <div className="flex items-center mt-2">
                 <div className="w-2 h-2 rounded-full bg-status-planned" role="presentation" />
                 <span className="ml-4">Planned</span>
-                <span className="ml-auto font-bold">{stats.planned}</span>
+                <span className="ml-auto font-bold">{stats?.planned}</span>
               </div>
               <div className="flex items-center mt-2">
                 <div className="w-2 h-2 rounded-full bg-status-in-progress" role="presentation" />
                 <span className="ml-4">In Progress</span>
-                <span className="ml-auto font-bold">{stats.inProgress}</span>
+                <span className="ml-auto font-bold">{stats?.inProgress}</span>
               </div>
               <div className="flex items-center mt-2">
                 <div className="w-2 h-2 rounded-full bg-status-live" role="presentation" />
                 <span className="ml-4">Live</span>
-                <span className="ml-auto font-bold">{stats.live}</span>
+                <span className="ml-auto font-bold">{stats?.live}</span>
               </div>
             </div>
           </div>
@@ -162,7 +164,7 @@ export default function Home() {
                   </clipPath>
                 </defs>
               </svg>
-              <p className="font-bold text-lg">{filteredRequests.length} Suggestions</p>
+              <p className="font-bold text-lg">{filteredRequests?.length} Suggestions</p>
             </div>
             <SortOptions
               value={selectedSortOption}
@@ -177,7 +179,7 @@ export default function Home() {
         </div>
 
         <div className="px-6 py-8 md:p-0 md:mt-6 flex flex-col">
-          {filteredRequests.length === 0 ? (
+          {filteredRequests?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded flex-grow p-8">
               <img src={emptyImage} width={102} aria-hidden />
               <p className="font-bold text-lg mt-9 text-center">There is no feedback yet.</p>
@@ -188,7 +190,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid gap-3">
-              {filteredRequests.map((request) => (
+              {filteredRequests?.map((request) => (
                 <Link key={request.id} to={{ pathname: `/${request.id}`, state: request }}>
                   <RequestCard request={request} />
                 </Link>
