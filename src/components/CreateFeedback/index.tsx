@@ -34,7 +34,7 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>();
+  } = useForm<FormValues>({ defaultValues: feedback });
 
   const [category, setCategory] = React.useState(() =>
     feedback
@@ -66,6 +66,27 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
     }
   }
 
+  async function updateRequest({ title, description }: FormValues) {
+    try {
+      const { error } = await supabase
+        .from('requests')
+        .update(
+          {
+            title,
+            description,
+            category: category.value,
+          },
+          { returning: 'minimal' }
+        )
+        .match({ id: feedback?.id });
+      if (error) throw new Error(error.message);
+      toast.success('Feedback updated');
+      history.goBack();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }
+
   return (
     <main className={`page-container px-6 py-8 md:py-14 ${classes.pageContainer}`}>
       <button onClick={history.goBack} className="flex items-center space-x-4">
@@ -75,7 +96,7 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
 
       <form
         className="mt-14 md:mt-16 p-6 md:p-10 bg-white rounded relative w-full"
-        onSubmit={handleSubmit(createRequest)}
+        onSubmit={handleSubmit(feedback ? updateRequest : createRequest)}
       >
         <div
           className={`h-10 w-10 md:w-14 md:h-14 rounded-full flex items-center justify-center absolute top-0 -translate-y-1/2 ${classes.decorativeIcon} bg-primary`}
@@ -139,15 +160,20 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
 
         <div className="flex space-x-4 mobile:space-x-2 justify-between mt-8">
           {feedback && (
-            <button className="btn danger" type="button">
+            <button className="btn danger" type="button" disabled={isSubmitting}>
               Delete
             </button>
           )}
           <div className="flex space-x-4 mobile:space-x-2 ml-auto">
-            <button className="btn secondary" type="button" onClick={history.goBack}>
+            <button
+              className="btn secondary"
+              type="button"
+              onClick={history.goBack}
+              disabled={isSubmitting}
+            >
               Cancel
             </button>
-            <button className="btn primary" type="submit">
+            <button className="btn primary" type="submit" disabled={isSubmitting}>
               {isSubmitting ? (
                 <Spinner className="text-2xl" />
               ) : feedback ? (
