@@ -34,7 +34,7 @@ export default function AuthenticatedApp() {
           {({ location, history }) => {
             return (
               <PageTransition uniqueKey={location.key ?? 'view-request'} action={history.action}>
-                <ViewFeedback feedback={location.state as App.Request} />
+                <ViewFeedback />
               </PageTransition>
             );
           }}

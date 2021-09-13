@@ -1,20 +1,22 @@
 import { Tab } from '@headlessui/react';
 import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import { productRequests } from '../../data.json';
+import useRequests, { RequestReturnType } from 'src/data/useRequests';
 import AngleLeft from '../../icons/AngleLeft';
+import Spinner from '../primitives/Spinner';
 import { RoadmapRequestCard } from '../RequestCard';
 
 export default function Roadmap() {
   const history = useHistory();
   const [selectedTab, setSelectedTab] = React.useState(0);
+  const { data, loading } = useRequests();
 
   const requests = React.useMemo(
     () =>
-      productRequests.reduce<{
-        Planned: App.Request[];
-        'In-Progress': App.Request[];
-        Live: App.Request[];
+      data?.reduce<{
+        Planned: RequestReturnType[];
+        'In-Progress': RequestReturnType[];
+        Live: RequestReturnType[];
       }>(
         (acc, curr) => ({
           Planned: acc['Planned'].concat(curr.status === 'planned' ? [curr] : []),
@@ -23,7 +25,7 @@ export default function Roadmap() {
         }),
         { Planned: [], 'In-Progress': [], Live: [] }
       ),
-    [productRequests]
+    [data]
   );
 
   return (
@@ -42,80 +44,86 @@ export default function Roadmap() {
         </Link>
       </div>
 
-      <div className="md:hidden">
-        <Tab.Group onChange={setSelectedTab}>
-          <Tab.List
-            className={`border-b border-light grid grid-cols-3 before:h-1 before:bg-primary before:w-1/3 ${
-              selectedTab === 1
-                ? 'before:translate-x-full'
-                : selectedTab === 2
-                ? 'before:translate-x-[200%]'
-                : ''
-            } relative before:absolute before:bottom-0 before:transition-transform`}
-          >
-            {Object.entries(requests).map(([key, value]) => (
-              <Tab as={React.Fragment} key={key}>
-                {({ selected }) => (
-                  <button
-                    className={`py-5 w-full flex text-default justify-center text-small font-bold ${
-                      selected ? '' : 'text-opacity-40'
-                    }`}
-                  >
-                    {key} ({value.length})
-                  </button>
-                )}
-              </Tab>
-            ))}
-          </Tab.List>
-          <Tab.Panels className="p-6">
-            {Object.entries(requests).map(([key, value]) => (
-              <Tab.Panel key={'Panel-' + key}>
-                <h2 className="text-lg font-bold">
-                  {key} ({value.length})
-                </h2>
-                <p className="text-light text-small">
-                  {key === 'Planned'
-                    ? 'Features to be developed'
-                    : key === 'In-Progress'
-                    ? 'Features currently being developed'
-                    : 'Features that have been implemented'}
-                </p>
-                <ul className="space-y-4 mt-6">
-                  {value.map((feedback) => (
-                    <li key={feedback.id}>
-                      <RoadmapRequestCard request={feedback} />
-                    </li>
-                  ))}
-                </ul>
-              </Tab.Panel>
-            ))}
-          </Tab.Panels>
-        </Tab.Group>
-      </div>
+      {loading ? (
+        <Spinner className="text-6xl mx-auto mt-16" />
+      ) : (
+        <>
+          <div className="md:hidden">
+            <Tab.Group onChange={setSelectedTab}>
+              <Tab.List
+                className={`border-b border-light grid grid-cols-3 before:h-1 before:bg-primary before:w-1/3 ${
+                  selectedTab === 1
+                    ? 'before:translate-x-full'
+                    : selectedTab === 2
+                    ? 'before:translate-x-[200%]'
+                    : ''
+                } relative before:absolute before:bottom-0 before:transition-transform`}
+              >
+                {Object.entries(requests ?? {}).map(([key, value]) => (
+                  <Tab as={React.Fragment} key={key}>
+                    {({ selected }) => (
+                      <button
+                        className={`py-5 w-full flex text-default justify-center text-small font-bold ${
+                          selected ? '' : 'text-opacity-40'
+                        }`}
+                      >
+                        {key} ({value.length})
+                      </button>
+                    )}
+                  </Tab>
+                ))}
+              </Tab.List>
+              <Tab.Panels className="p-6">
+                {Object.entries(requests ?? {}).map(([key, value]) => (
+                  <Tab.Panel key={'Panel-' + key}>
+                    <h2 className="text-lg font-bold">
+                      {key} ({value.length})
+                    </h2>
+                    <p className="text-light text-small">
+                      {key === 'Planned'
+                        ? 'Features to be developed'
+                        : key === 'In-Progress'
+                        ? 'Features currently being developed'
+                        : 'Features that have been implemented'}
+                    </p>
+                    <ul className="space-y-4 mt-6">
+                      {value.map((feedback) => (
+                        <li key={feedback.id}>
+                          <RoadmapRequestCard request={feedback} />
+                        </li>
+                      ))}
+                    </ul>
+                  </Tab.Panel>
+                ))}
+              </Tab.Panels>
+            </Tab.Group>
+          </div>
 
-      <div className="mobile:hidden mt-8 lg:mt-12">
-        <KanbanBoard
-          planned={requests.Planned}
-          inProgress={requests['In-Progress']}
-          live={requests.Live}
-        />
-      </div>
+          <div className="mobile:hidden mt-8 lg:mt-12">
+            <KanbanBoard
+              planned={requests?.Planned}
+              inProgress={requests?.['In-Progress']}
+              live={requests?.Live}
+            />
+          </div>
+        </>
+      )}
     </main>
   );
 }
 
 function KanbanBoard(props: {
-  planned: App.Request[];
-  inProgress: App.Request[];
-  live: App.Request[];
+  planned?: RequestReturnType[];
+  inProgress?: RequestReturnType[];
+  live?: RequestReturnType[];
 }) {
   return (
     <div className="grid grid-cols-3 gap-4 lg:gap-8">
       <div>
-        <h2 className="font-bold">Planned ({props.planned.length})</h2>
+        <h2 className="font-bold">Planned ({props.planned?.length})</h2>
         <p className="text-light text-sm">Ideas prioritized for research</p>
         <ul className="space-y-4 lg:space-y-6 mt-6">
-          {props.planned.map((feedback) => (
+          {props.planned?.map((feedback) => (
             <li key={feedback.id}>
               <RoadmapRequestCard request={feedback} />
             </li>
@@ -123,10 +131,10 @@ function KanbanBoard(props: {
         </ul>
       </div>
       <div>
-        <h2 className="font-bold">In-Progress ({props.inProgress.length})</h2>
+        <h2 className="font-bold">In-Progress ({props.inProgress?.length})</h2>
         <p className="text-light text-sm">Currently being developed</p>
         <ul className="space-y-4 lg:space-y-6 mt-6">
-          {props.inProgress.map((feedback) => (
+          {props.inProgress?.map((feedback) => (
             <li key={feedback.id}>
               <RoadmapRequestCard request={feedback} />
             </li>
@@ -134,10 +142,10 @@ function KanbanBoard(props: {
         </ul>
       </div>
       <div>
-        <h2 className="font-bold">Live ({props.live.length})</h2>
+        <h2 className="font-bold">Live ({props.live?.length})</h2>
         <p className="text-light text-sm">Released features</p>
         <ul className="space-y-4 lg:space-y-6 mt-6">
-          {props.live.map((feedback) => (
+          {props.live?.map((feedback) => (
             <li key={feedback.id}>
               <RoadmapRequestCard request={feedback} />
             </li>
