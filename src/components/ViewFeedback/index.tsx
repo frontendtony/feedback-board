@@ -1,20 +1,21 @@
 import * as React from 'react';
 import toast from 'react-hot-toast';
-import { useHistory } from 'react-router-dom';
-import useComments, { CommentsReturnType } from 'src/data/useComments';
-import { RequestReturnType } from 'src/data/useRequests';
+import { useHistory, useParams } from 'react-router-dom';
+import useRequest, { RequestReturnType } from 'src/data/useRequest';
 import supabase from 'src/utils/supabase';
 import { mutate } from 'swr';
 import AngleLeft from '../../icons/AngleLeft';
 import Spinner from '../primitives/Spinner';
 import TextArea from '../primitives/TextArea';
-import RequestCard from '../RequestCard';
 import './index.css';
 import classes from './index.module.css';
+import RequestCard from './RequestCard';
 
-export default function ViewFeedback(props: { feedback: RequestReturnType }) {
+export default function ViewFeedback() {
   const history = useHistory();
-  const { data: comments } = useComments(props.feedback.id);
+  const params = useParams<{ id: string }>();
+
+  const { data, loading } = useRequest(params.id);
   const [comment, setComment] = React.useState('');
   const [isSubmitting, setSubmitting] = React.useState(false);
 
@@ -23,7 +24,7 @@ export default function ViewFeedback(props: { feedback: RequestReturnType }) {
       setSubmitting(true);
       const { error } = await supabase.from('comments').insert([
         {
-          request_id: props.feedback.id,
+          request_id: data?.id,
           user_id: supabase.auth.user()?.id,
           content: comment,
         },
@@ -31,7 +32,7 @@ export default function ViewFeedback(props: { feedback: RequestReturnType }) {
       if (error) throw new Error('Could not add comment, please try again');
       setComment('');
       toast.success('Comment added successfully');
-      mutate([props.feedback.id, 'comments']); // reload list of comments
+      mutate(`${data?.id}`); // reload list of comments
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -47,62 +48,67 @@ export default function ViewFeedback(props: { feedback: RequestReturnType }) {
           <span className="font-bold text-small text-light">Go Back</span>
         </button>
         <button
-          onClick={() =>
-            history.push({ pathname: `/${props.feedback.id}/edit`, state: props.feedback })
-          }
+          onClick={() => history.push({ pathname: `/${data?.id}/edit`, state: data })}
           className="btn alternate"
+          disabled={!data}
         >
           Edit Feedback
         </button>
       </div>
 
-      <div className="mt-6 md:px-2 md:py-1 bg-white rounded">
-        <RequestCard request={props.feedback} />
-      </div>
+      {loading ? (
+        <Spinner className="text-6xl mx-auto mt-16" />
+      ) : (
+        data && (
+          <>
+            <div className="mt-6 md:px-2 md:py-1 bg-white rounded">
+              <RequestCard request={data} />
+            </div>
 
-      <div className="mt-6 p-6 md:px-8 md:py-7 bg-white rounded">
-        <h3 className="text-lg font-bold">
-          {props.feedback.comments_count?.[0].count ?? 0} Comment(s)
-        </h3>
+            <div className="mt-6 p-6 md:px-8 md:py-7 bg-white rounded">
+              <h3 className="text-lg font-bold">{data?.comments.length} Comment(s)</h3>
 
-        <div className="mt-1 divide-y divide-light divide-opacity-25">
-          {comments?.map((comment) => (
-            <Comment key={comment.id} comment={comment} />
-          ))}
-        </div>
-      </div>
+              <div className="mt-1 divide-y divide-light divide-opacity-25">
+                {data?.comments?.map((comment) => (
+                  <Comment key={comment.id} comment={comment} />
+                ))}
+              </div>
+            </div>
 
-      <form
-        className="mt-6 p-6 md:px-8 md:py-7 bg-white rounded"
-        onSubmit={(e) => {
-          e.preventDefault();
-          addComment();
-        }}
-      >
-        <h3 className="text-lg font-bold">Add Comment</h3>
-        <TextArea
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          id="new-comment"
-          className="mt-6"
-          disabled={isSubmitting}
-        />
-        <div className="flex items-center justify-between mt-4">
-          <span className="text-light">{250 - comment.length} Characters left</span>
-          <button
-            className="btn primary"
-            type="submit"
-            disabled={isSubmitting || comment.length === 0}
-          >
-            {isSubmitting ? <Spinner className="text-2xl" /> : 'Post Comment'}
-          </button>
-        </div>
-      </form>
+            <form
+              className="mt-6 p-6 md:px-8 md:py-7 bg-white rounded"
+              onSubmit={(e) => {
+                e.preventDefault();
+                addComment();
+              }}
+            >
+              <h3 className="text-lg font-bold">Add Comment</h3>
+              <TextArea
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                id="new-comment"
+                className="mt-6"
+                disabled={isSubmitting}
+              />
+              <div className="flex items-center justify-between mt-4">
+                <span className="text-light">{250 - comment.length} Characters left</span>
+                <button
+                  className="btn primary"
+                  type="submit"
+                  disabled={isSubmitting || comment.length === 0}
+                >
+                  {isSubmitting ? <Spinner className="text-2xl" /> : 'Post Comment'}
+                </button>
+              </div>
+            </form>
+          </>
+        )
+      )}
     </main>
   );
 }
 
-function Comment({ comment }: { comment: CommentsReturnType }) {
+function Comment({ comment }: { comment: RequestReturnType['comments'][0] }) {
   const [showForm, toggleForm] = React.useState(false);
   const [reply, setReply] = React.useState('');
   const [isSubmitting, setSubmitting] = React.useState(false);
@@ -121,7 +127,7 @@ function Comment({ comment }: { comment: CommentsReturnType }) {
       setReply('');
       toggleForm(false);
       toast.success('Comment added successfully');
-      mutate([comment.request_id, 'comments']); // reload list of comments
+      mutate(comment.request_id); // reload list of comments
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -189,7 +195,7 @@ function Comment({ comment }: { comment: CommentsReturnType }) {
   );
 }
 
-function Reply({ reply }: { reply: CommentsReturnType['replies'][0] }) {
+function Reply({ reply }: { reply: RequestReturnType['comments'][0]['replies'][0] }) {
   return (
     <div className="pl-6 reply">
       <div className="flex items-center">
