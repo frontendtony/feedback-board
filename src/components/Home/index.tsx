@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import useRequests from 'src/data/useRequests';
 import emptyImage from '../../assets/empty.png';
 import FilterOptions from '../FilterOptions';
+import Spinner from '../primitives/Spinner';
 import RequestCard from '../RequestCard';
 import SortOptions from '../SortOptions';
 import classes from './index.module.css';
@@ -14,7 +15,7 @@ export default function Home() {
   const [selectedFilterOption, setSelectedFilterOption] = React.useState('All');
   const [selectedSortOption, setSelectedSortOption] = React.useState(sortOptions[0]);
 
-  const { data: requests, error, loading } = useRequests();
+  const { data: requests, loading } = useRequests();
 
   const filteredRequests = React.useMemo(() => {
     let result = requests;
@@ -185,7 +186,9 @@ export default function Home() {
         </div>
 
         <div className="px-6 py-8 md:p-0 md:mt-6 flex flex-col">
-          {filteredRequests?.length === 0 ? (
+          {loading ? (
+            <Spinner className="text-6xl mx-auto mt-16" />
+          ) : filteredRequests?.length === 0 ? (
             <div className="flex flex-col items-center justify-center bg-white rounded flex-grow p-8">
               <img src={emptyImage} width={102} aria-hidden />
               <p className="font-bold text-lg mt-9 text-center">There is no feedback yet.</p>
