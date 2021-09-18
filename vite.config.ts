@@ -35,6 +35,15 @@ export default defineConfig({
           },
         ],
       },
+      workbox: {
+        runtimeCaching: [
+          {
+            handler: 'CacheFirst',
+            method: 'GET',
+            urlPattern: '*',
+          },
+        ],
+      },
       registerType: 'autoUpdate',
     }),
     replace({
