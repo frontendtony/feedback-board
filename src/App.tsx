@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Auth from './components/Auth';
 import Spinner from './components/primitives/Spinner';
+import ReloadPrompt from './ServiceWorkerPrompt';
 import './styles/main.css';
 import supabase from './utils/supabase';
 
@@ -86,6 +87,7 @@ function App() {
           </Route>
         </Switch>
       </Router>
+      <ReloadPrompt />
     </>
   );
 }
