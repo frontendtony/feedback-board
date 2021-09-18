@@ -10,7 +10,7 @@ import TextInput from '../primitives/TextInput';
 type FormValues = { name: string; email: string; password: string };
 
 export default function Auth() {
-  const { location, push } = useHistory();
+  const history = useHistory();
   let { url } = useRouteMatch();
 
   const {
@@ -21,7 +21,7 @@ export default function Auth() {
 
   const [isSubmitting, setSubmitting] = React.useState(false);
 
-  const isLogin = location.pathname !== '/auth/sign-up';
+  const isLogin = history.location.pathname !== '/auth/sign-up';
 
   async function signIn(values: FormValues) {
     try {
@@ -31,7 +31,7 @@ export default function Auth() {
         password: values.password,
       });
       if (error) throw new Error(error.message);
-      push('/');
+      history.replace('/');
     } catch (e: any) {
       setSubmitting(false);
       toast.error(e.message);
@@ -56,7 +56,7 @@ export default function Auth() {
         throw new Error(createProfileError.message);
       }
       toast.success('Account created successfully');
-      push('/');
+      history.replace('/');
     } catch (e: any) {
       setSubmitting(false);
       toast.error(e.message);
