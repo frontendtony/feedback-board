@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { Link, useHistory, useRouteMatch } from 'react-router-dom';
@@ -64,6 +65,11 @@ export default function Auth() {
 
   return (
     <div className="page-container flex items-start justify-center">
+      <Helmet>
+        <title>
+          {`${location.pathname === '/auth/login' ? 'Login' : 'Sign Up'}`} - Feedback Board
+        </title>
+      </Helmet>
       <div className="bg-white rounded overflow-hidden mx-6 my-8 w-full max-w-md">
         <div className="px-6 py-8 md:px-8 md:py-10 w-full max-w-md">
           <img
