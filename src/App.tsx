@@ -1,11 +1,13 @@
 import { User } from '@supabase/gotrue-js';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import AuthenticatedApp from './AuthenticatedApp';
 import Auth from './components/Auth';
+import Spinner from './components/primitives/Spinner';
 import './styles/main.css';
 import supabase from './utils/supabase';
+
+const AuthenticatedApp = React.lazy(() => import('./AuthenticatedApp'));
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -65,7 +67,23 @@ function App() {
           <Route path="/auth">
             <Auth />
           </Route>
-          <Route>{() => (user ? <AuthenticatedApp /> : <Redirect to="/auth/login" />)}</Route>
+          <Route>
+            {() =>
+              user ? (
+                <Suspense
+                  fallback={
+                    <div className="h-screen w-screen flex items-center justify-center">
+                      <Spinner />
+                    </div>
+                  }
+                >
+                  <AuthenticatedApp />
+                </Suspense>
+              ) : (
+                <Redirect to="/auth/login" />
+              )
+            }
+          </Route>
         </Switch>
       </Router>
     </>
