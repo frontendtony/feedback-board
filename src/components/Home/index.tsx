@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 import useRequests from 'src/data/useRequests';
 import emptyImage from '../../assets/empty.png';
@@ -82,6 +83,9 @@ export default function Home() {
 
   return (
     <main className={`${classes.pageContainer} page-container`}>
+      <Helmet>
+        <title>{`${filteredRequests?.length ?? 0}`} Suggestions - Feedback Board</title>
+      </Helmet>
       <div className={classes.header}>
         <div className={`${classes.nav} bg-primary`}>
           <div className="text-white text-left">

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Helmet } from 'react-helmet';
 import toast from 'react-hot-toast';
 import { useHistory, useParams } from 'react-router-dom';
 import useRequest, { RequestReturnType } from 'src/data/useRequest';
@@ -42,6 +43,9 @@ export default function ViewFeedback() {
 
   return (
     <main className={`page-container px-6 py-8 md:py-14 ${classes.pageContainer}`}>
+      <Helmet>
+        <title>{`${data?.title ?? 'Loading Feedback'}`} - Feedback Board</title>
+      </Helmet>
       <div className="flex items-center justify-between">
         <button onClick={history.goBack} className="flex items-center space-x-4">
           <AngleLeft className="text-alternate" />

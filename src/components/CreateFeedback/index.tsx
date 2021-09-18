@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useHistory } from 'react-router-dom';
@@ -89,6 +90,9 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
 
   return (
     <main className={`page-container px-6 py-8 md:py-14 ${classes.pageContainer}`}>
+      <Helmet>
+        <title>{feedback ? 'Update' : 'Create'} Feedback - Feedback Board</title>
+      </Helmet>
       <button onClick={history.goBack} className="flex items-center space-x-4">
         <AngleLeft className="text-alternate" />
         <span className="font-bold text-small text-light">Go Back</span>

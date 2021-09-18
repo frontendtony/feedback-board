@@ -1,5 +1,6 @@
 import { Tab } from '@headlessui/react';
 import * as React from 'react';
+import { Helmet } from 'react-helmet';
 import { Link, useHistory } from 'react-router-dom';
 import useRequests, { RequestReturnType } from 'src/data/useRequests';
 import AngleLeft from '../../icons/AngleLeft';
@@ -30,6 +31,9 @@ export default function Roadmap() {
 
   return (
     <main className="page-container">
+      <Helmet>
+        <title>Product Roadmap - Feedback Board</title>
+      </Helmet>
       <div className="flex items-center justify-between bg-dark text-white px-6 py-5 md:p-8 md:py-7 md:rounded">
         <div>
           <button onClick={history.goBack} className="flex items-center space-x-4 text-white">
