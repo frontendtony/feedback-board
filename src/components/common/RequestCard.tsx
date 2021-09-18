@@ -2,7 +2,7 @@ import * as React from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { RequestReturnType } from 'src/data/useRequests';
-import supabase from 'src/utils/supabase';
+import { upvoteRequest } from 'src/utils/api';
 import { mutate } from 'swr';
 import AngleUp from '../../icons/AngleUp';
 import CommentBubble from '../../icons/CommentBubble';
@@ -10,19 +10,7 @@ import CommentBubble from '../../icons/CommentBubble';
 export default function RequestCard({ request }: { request: RequestReturnType }) {
   async function upvote() {
     try {
-      const { data } = await supabase
-        .from('upvotes')
-        .select('*')
-        .filter('user_id', 'eq', supabase.auth.session()?.user?.id)
-        .filter('request_id', 'eq', request.id);
-      if (data?.length) throw new Error('You can only upvote a request once');
-      const { error } = await supabase.from('upvotes').insert([
-        {
-          user_id: supabase.auth.session()?.user?.id,
-          request_id: request.id,
-        },
-      ]);
-      if (error) throw new Error('Could not upvote request');
+      await upvoteRequest(request.id);
       toast.success('Request upvoted successfully');
       mutate('requests');
     } catch (error: any) {
@@ -59,19 +47,7 @@ export default function RequestCard({ request }: { request: RequestReturnType })
 export function RoadmapRequestCard({ request }: { request: RequestReturnType }) {
   async function upvote() {
     try {
-      const { data } = await supabase
-        .from('upvotes')
-        .select('*')
-        .filter('user_id', 'eq', supabase.auth.session()?.user?.id)
-        .filter('request_id', 'eq', request.id);
-      if (data?.length) throw new Error('You can only upvote a request once');
-      const { error } = await supabase.from('upvotes').insert([
-        {
-          user_id: supabase.auth.session()?.user?.id,
-          request_id: request.id,
-        },
-      ]);
-      if (error) throw new Error('Could not upvote request');
+      await upvoteRequest(request.id);
       toast.success('Request upvoted successfully');
       mutate('requests');
     } catch (error: any) {
