@@ -73,7 +73,7 @@ function App() {
                 <Suspense
                   fallback={
                     <div className="h-screen w-screen flex items-center justify-center">
-                      <Spinner />
+                      <Spinner className="text-6xl text-primary" />
                     </div>
                   }
                 >
