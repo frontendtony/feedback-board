@@ -3,8 +3,8 @@ import * as React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import useRequests, { RequestReturnType } from 'src/data/useRequests';
 import AngleLeft from '../../icons/AngleLeft';
+import { RoadmapRequestCard } from '../common/RequestCard';
 import Spinner from '../primitives/Spinner';
-import { RoadmapRequestCard } from '../RequestCard';
 
 export default function Roadmap() {
   const history = useHistory();

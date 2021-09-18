@@ -1,6 +1,6 @@
 import { Listbox } from '@headlessui/react';
 import * as React from 'react';
-import AngleDown from '../icons/AngleDown';
+import AngleDown from '../../icons/AngleDown';
 
 export default function SortOptions(props: {
   value: string;

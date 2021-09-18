@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import useRequests from 'src/data/useRequests';
 import emptyImage from '../../assets/empty.png';
-import FilterOptions from '../FilterOptions';
+import RequestCard from '../common/RequestCard';
 import Spinner from '../primitives/Spinner';
-import RequestCard from '../RequestCard';
-import SortOptions from '../SortOptions';
+import FilterOptions from './FilterOptions';
 import classes from './index.module.css';
+import SortOptions from './SortOptions';
 
 const sortOptions = ['Most Upvotes', 'Least Upvotes', 'Most Comments', 'Least Comments'];
 
@@ -55,7 +55,7 @@ export default function Home() {
     }
 
     return result;
-  }, [selectedFilterOption, selectedSortOption, loading]);
+  }, [selectedFilterOption, selectedSortOption, loading, requests]);
 
   const toggleMenu = () => {
     // disable body scroll
@@ -200,9 +200,7 @@ export default function Home() {
           ) : (
             <div className="grid gap-3">
               {filteredRequests?.map((request) => (
-                <Link key={request.id} to={`/${request.id}`}>
-                  <RequestCard request={request} />
-                </Link>
+                <RequestCard key={request.id} request={request} />
               ))}
             </div>
           )}
