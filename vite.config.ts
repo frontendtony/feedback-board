@@ -38,9 +38,9 @@ export default defineConfig({
       workbox: {
         runtimeCaching: [
           {
-            handler: 'CacheFirst',
+            handler: 'NetworkFirst',
             method: 'GET',
-            urlPattern: '*',
+            urlPattern: new RegExp('.*'),
           },
         ],
       },
