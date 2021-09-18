@@ -10,17 +10,23 @@ import CommentBubble from '../../icons/CommentBubble';
 export default function RequestCard({ request }: { request: RequestReturnType }) {
   async function upvote() {
     try {
+      const { data } = await supabase
+        .from('upvotes')
+        .select('*')
+        .filter('user_id', 'eq', supabase.auth.session()?.user?.id)
+        .filter('request_id', 'eq', request.id);
+      if (data?.length) throw new Error('You can only upvote a request once');
       const { error } = await supabase.from('upvotes').insert([
         {
           user_id: supabase.auth.session()?.user?.id,
           request_id: request.id,
         },
       ]);
-      if (error) throw new Error(error.message);
+      if (error) throw new Error('Could not upvote request');
       toast.success('Request upvoted successfully');
       mutate('requests');
-    } catch (error) {
-      toast.error('Could not upvote request');
+    } catch (error: any) {
+      toast.error(error.message);
     }
   }
 
@@ -53,17 +59,23 @@ export default function RequestCard({ request }: { request: RequestReturnType })
 export function RoadmapRequestCard({ request }: { request: RequestReturnType }) {
   async function upvote() {
     try {
+      const { data } = await supabase
+        .from('upvotes')
+        .select('*')
+        .filter('user_id', 'eq', supabase.auth.session()?.user?.id)
+        .filter('request_id', 'eq', request.id);
+      if (data?.length) throw new Error('You can only upvote a request once');
       const { error } = await supabase.from('upvotes').insert([
         {
           user_id: supabase.auth.session()?.user?.id,
           request_id: request.id,
         },
       ]);
-      if (error) throw new Error(error.message);
+      if (error) throw new Error('Could not upvote request');
       toast.success('Request upvoted successfully');
       mutate('requests');
-    } catch (error) {
-      toast.error('Could not upvote request');
+    } catch (error: any) {
+      toast.error(error.message);
     }
   }
 
