@@ -46,6 +46,8 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
     feedback ? statuses.find(({ value }) => value === feedback.status) ?? statuses[0] : statuses[0]
   );
 
+  const user = supabase.auth.session()?.user;
+
   async function createRequest({ title, description }: FormValues) {
     try {
       const { error } = await supabase.from('requests').insert(
@@ -83,6 +85,17 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
       if (error) throw new Error(error.message);
       toast.success('Feedback updated');
       history.goBack();
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }
+
+  async function deleteRequest() {
+    try {
+      const { error } = await supabase.from('requests').delete().match({ id: feedback?.id });
+      if (error) throw new Error(error.message);
+      toast.success('Feedback deleted');
+      history.push('/');
     } catch (error: any) {
       toast.error(error.message);
     }
@@ -163,8 +176,13 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
         </div>
 
         <div className="flex space-x-4 mobile:space-x-2 justify-between mt-8">
-          {feedback && (
-            <button className="btn danger" type="button" disabled={isSubmitting}>
+          {feedback && feedback.user_id === user?.id && (
+            <button
+              className="btn danger"
+              type="button"
+              disabled={isSubmitting}
+              onClick={deleteRequest}
+            >
               Delete
             </button>
           )}
