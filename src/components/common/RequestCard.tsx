@@ -73,11 +73,11 @@ export function RoadmapRequestCard({ request }: { request: RequestReturnType }) 
           : 'border-status-live'
       }`}
     >
-      <div>
+      <Link to={`/${request.id}`}>
         <p className="font-bold">{request.title}</p>
         <p className="mt-2 text-light text-small">{request.description}</p>
         <div className="request-label mt-3">{request.category}</div>
-      </div>
+      </Link>
 
       <div className="flex items-center justify-between mt-4">
         <Upvotes upvote={upvote} count={request.upvotes_count?.[0].count} />
