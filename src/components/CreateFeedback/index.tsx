@@ -79,6 +79,7 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
             title,
             description,
             category: category.value,
+            status: status.value,
           },
           { returning: 'minimal' }
         )
