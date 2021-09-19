@@ -102,6 +102,7 @@
         padding: 0.875rem 1.5rem;
         margin-top: 2.5rem;
         border-radius: 0.625rem;
+        position: static;
       }
     }
   }
