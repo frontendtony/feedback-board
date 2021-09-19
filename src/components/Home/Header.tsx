@@ -38,14 +38,16 @@ export default function Header(props: {
           <div className="flex items-center space-x-2">
             <Menu as="div" className="relative inline-block text-left">
               <Menu.Button className="">
-                <span className="sr-only"></span>
-                <img
-                  src={`https://avatars.dicebear.com/api/avataaars/${profile?.id}.svg`}
-                  alt={profile?.name}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
+                <span className="sr-only">Show/hide profile menu</span>
+                {profile && (
+                  <img
+                    src={`https://avatars.dicebear.com/api/avataaars/${profile?.id}.svg`}
+                    alt={profile?.name}
+                    width={40}
+                    height={40}
+                    className="rounded-full"
+                  />
+                )}
               </Menu.Button>
               <Transition
                 as={React.Fragment}
