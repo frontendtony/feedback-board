@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
+import useProfile from 'src/data/useProfile';
 import useRequests from 'src/data/useRequests';
 import emptyImage from '../../assets/empty.png';
 import RequestCard from '../common/RequestCard';
@@ -16,6 +17,7 @@ export default function Home() {
   const [selectedFilterOption, setSelectedFilterOption] = React.useState('All');
   const [selectedSortOption, setSelectedSortOption] = React.useState(sortOptions[0]);
 
+  const { data: profile } = useProfile();
   const { data: requests, loading } = useRequests();
 
   const filteredRequests = React.useMemo(() => {
@@ -88,11 +90,26 @@ export default function Home() {
       </Helmet>
       <div className={classes.header}>
         <div className={`${classes.nav} bg-primary`}>
-          <div className="text-white text-left">
-            <h1 className="font-bold text-regular md:text-xl">Frontend Mentor</h1>
-            <p className="opacity-75 text-small md:text-regular block font-medium">
-              Feedback Board
-            </p>
+          <div className="text-white text-left flex flex-grow flex-row-reverse md:flex-col justify-between mr-4">
+            <div className="flex items-center space-x-2">
+              <img
+                src={`https://avatars.dicebear.com/api/avataaars/${profile?.id}.svg`}
+                alt={profile?.name}
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+              <div className="hidden md:block">
+                <p className="truncate leading-none">{profile?.name}</p>
+                <p className="text-small leading-none font-semibold">@{profile?.username}</p>
+              </div>
+            </div>
+            <div>
+              <h1 className="font-bold text-regular md:text-xl">Frontend Mentor</h1>
+              <p className="opacity-75 text-small md:text-regular block font-medium">
+                Feedback Board
+              </p>
+            </div>
           </div>
           <button className="md:hidden" onClick={toggleMenu}>
             <span className="sr-only">{isMenuVisible ? 'Close Menu' : 'Open Menu'}</span>

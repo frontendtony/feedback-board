@@ -77,9 +77,9 @@
 
       & > .nav {
         border-radius: 0.625rem;
-        align-items: flex-end;
+        align-items: stretch;
         height: 100%;
-        padding-bottom: 1.5rem;
+        padding: 1.5rem;
       }
 
       & > .menu-backdrop {
