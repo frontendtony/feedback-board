@@ -1,11 +1,12 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import toast from 'react-hot-toast';
-import { useHistory, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import useRequest from 'src/data/useRequest';
 import useUser from 'src/data/useUser';
 import supabase from 'src/utils/supabase';
 import { mutate } from 'swr';
+import emptyImage from '../../assets/empty.png';
 import AngleLeft from '../../icons/AngleLeft';
 import Spinner from '../primitives/Spinner';
 import TextArea from '../primitives/TextArea';
@@ -19,7 +20,7 @@ export default function ViewFeedback() {
   const params = useParams<{ id: string }>();
   const user = useUser();
 
-  const { data, loading } = useRequest(params.id);
+  const { data, loading, error } = useRequest(params.id);
   const [comment, setComment] = React.useState('');
   const [isSubmitting, setSubmitting] = React.useState(false);
 
@@ -65,7 +66,19 @@ export default function ViewFeedback() {
         )}
       </div>
 
-      {loading ? (
+      {error ? (
+        <div className="flex flex-col items-center justify-center bg-white rounded flex-grow p-8 mt-16">
+          <img src={emptyImage} width={102} aria-hidden />
+          <p className="font-bold text-lg mt-9 text-center">Feedback not found</p>
+          <p className="text-small text-center max-w-[44ch] mt-3">
+            Oops! We couldn't find the Feedback you're looking for. It may have been removed by the
+            Author
+          </p>
+          <Link to="/" className="btn primary mt-6">
+            Go back home
+          </Link>
+        </div>
+      ) : loading ? (
         <Spinner className="text-6xl mx-auto mt-16" />
       ) : (
         data && (
