@@ -17,3 +17,10 @@ export async function upvoteRequest(requestId: string) {
   ]);
   if (error) throw new Error('Could not upvote request');
 }
+
+export async function updateRequestStatus(requestId: string, status: string) {
+  // check for existing upvote by the same user
+  const { error } = await supabase.from('requests').update({ status }).match({ id: requestId });
+
+  if (error) throw new Error('Could not upvote request status');
+}

@@ -12,7 +12,13 @@ export default function useAcceptedRequests() {
   return {
     data,
     error,
+    groupedData: {
+      planned: data?.filter(({ status }) => status === 'planned') ?? [],
+      'in-progress': data?.filter(({ status }) => status === 'in-progress') ?? [],
+      live: data?.filter(({ status }) => status === 'live') ?? [],
+    },
     loading: !data && !error,
+    mutate,
     revalidate: () => mutate(),
   };
 }

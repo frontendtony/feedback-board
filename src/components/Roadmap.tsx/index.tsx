@@ -1,8 +1,11 @@
 import { Tab } from '@headlessui/react';
 import * as React from 'react';
+import { DragDropContext, Draggable, DraggableLocation, Droppable } from 'react-beautiful-dnd';
 import { Helmet } from 'react-helmet';
+import toast from 'react-hot-toast';
 import { Link, useHistory } from 'react-router-dom';
 import useAcceptedRequests, { RequestReturnType } from 'src/data/useAcceptedRequests';
+import { updateRequestStatus } from 'src/utils/api';
 import AngleLeft from '../../icons/AngleLeft';
 import { RoadmapRequestCard } from '../common/RequestCard';
 import Spinner from '../primitives/Spinner';
@@ -10,24 +13,9 @@ import Spinner from '../primitives/Spinner';
 export default function Roadmap() {
   const history = useHistory();
   const [selectedTab, setSelectedTab] = React.useState(0);
-  const { data, loading } = useAcceptedRequests();
+  const { loading, groupedData } = useAcceptedRequests();
 
-  const requests = React.useMemo(
-    () =>
-      data?.reduce<{
-        Planned: RequestReturnType[];
-        'In-Progress': RequestReturnType[];
-        Live: RequestReturnType[];
-      }>(
-        (acc, curr) => ({
-          Planned: acc['Planned'].concat(curr.status === 'planned' ? [curr] : []),
-          'In-Progress': acc['In-Progress'].concat(curr.status === 'in-progress' ? [curr] : []),
-          Live: acc['Live'].concat(curr.status === 'live' ? [curr] : []),
-        }),
-        { Planned: [], 'In-Progress': [], Live: [] }
-      ),
-    [data]
-  );
+  const { planned, ['in-progress']: inProgress, live } = groupedData;
 
   return (
     <main className="page-container">
@@ -63,52 +51,80 @@ export default function Roadmap() {
                     : ''
                 } relative before:absolute before:bottom-0 before:transition-transform`}
               >
-                {Object.entries(requests ?? {}).map(([key, value]) => (
-                  <Tab as={React.Fragment} key={key}>
-                    {({ selected }) => (
-                      <button
-                        className={`py-5 w-full flex text-default justify-center text-small font-bold ${
-                          selected ? '' : 'text-opacity-40'
-                        }`}
-                      >
-                        {key} ({value.length})
-                      </button>
-                    )}
-                  </Tab>
-                ))}
+                <Tab as={React.Fragment}>
+                  {({ selected }) => (
+                    <button
+                      className={`py-5 w-full flex text-default justify-center text-small font-bold ${
+                        selected ? '' : 'text-opacity-40'
+                      }`}
+                    >
+                      Planned ({planned.length})
+                    </button>
+                  )}
+                </Tab>
+                <Tab as={React.Fragment}>
+                  {({ selected }) => (
+                    <button
+                      className={`py-5 w-full flex text-default justify-center text-small font-bold ${
+                        selected ? '' : 'text-opacity-40'
+                      }`}
+                    >
+                      In-Progress ({inProgress.length})
+                    </button>
+                  )}
+                </Tab>
+                <Tab as={React.Fragment}>
+                  {({ selected }) => (
+                    <button
+                      className={`py-5 w-full flex text-default justify-center text-small font-bold ${
+                        selected ? '' : 'text-opacity-40'
+                      }`}
+                    >
+                      Live ({live.length})
+                    </button>
+                  )}
+                </Tab>
               </Tab.List>
               <Tab.Panels className="p-6">
-                {Object.entries(requests ?? {}).map(([key, value]) => (
-                  <Tab.Panel key={'Panel-' + key}>
-                    <h2 className="text-lg font-bold">
-                      {key} ({value.length})
-                    </h2>
-                    <p className="text-light text-small">
-                      {key === 'Planned'
-                        ? 'Features to be developed'
-                        : key === 'In-Progress'
-                        ? 'Features currently being developed'
-                        : 'Features that have been implemented'}
-                    </p>
-                    <ul className="space-y-4 mt-6">
-                      {value.map((feedback) => (
-                        <li key={feedback.id}>
-                          <RoadmapRequestCard request={feedback} />
-                        </li>
-                      ))}
-                    </ul>
-                  </Tab.Panel>
-                ))}
+                <Tab.Panel>
+                  <h2 className="text-lg font-bold">Planned ({planned.length})</h2>
+                  <p className="text-light text-small">Ideas prioritized for research</p>
+                  <ul className="space-y-4 mt-6">
+                    {planned.map((feedback) => (
+                      <li key={feedback.id}>
+                        <RoadmapRequestCard request={feedback} />
+                      </li>
+                    ))}
+                  </ul>
+                </Tab.Panel>
+                <Tab.Panel>
+                  <h2 className="text-lg font-bold">In-Progress ({inProgress.length})</h2>
+                  <p className="text-light text-small">Currently being developed</p>
+                  <ul className="space-y-4 mt-6">
+                    {inProgress.map((feedback) => (
+                      <li key={feedback.id}>
+                        <RoadmapRequestCard request={feedback} />
+                      </li>
+                    ))}
+                  </ul>
+                </Tab.Panel>
+                <Tab.Panel>
+                  <h2 className="text-lg font-bold">Live ({live.length})</h2>
+                  <p className="text-light text-small">Released features</p>
+                  <ul className="space-y-4 mt-6">
+                    {live.map((feedback) => (
+                      <li key={feedback.id}>
+                        <RoadmapRequestCard request={feedback} />
+                      </li>
+                    ))}
+                  </ul>
+                </Tab.Panel>
               </Tab.Panels>
             </Tab.Group>
           </div>
 
           <div className="mobile:hidden mt-8 lg:mt-12">
-            <KanbanBoard
-              planned={requests?.Planned}
-              inProgress={requests?.['In-Progress']}
-              live={requests?.Live}
-            />
+            <KanbanBoard />
           </div>
         </>
       )}
@@ -116,46 +132,117 @@ export default function Roadmap() {
   );
 }
 
-function KanbanBoard(props: {
-  planned?: RequestReturnType[];
-  inProgress?: RequestReturnType[];
-  live?: RequestReturnType[];
-}) {
+function KanbanBoard() {
+  const [requests, setRequests] = React.useState<{
+    planned: RequestReturnType[];
+    'in-progress': RequestReturnType[];
+    live: RequestReturnType[];
+  }>({
+    planned: [],
+    'in-progress': [],
+    live: [],
+  });
+  const { data, groupedData } = useAcceptedRequests();
+  const { planned, ['in-progress']: inProgress, live } = requests;
+
+  React.useEffect(() => {
+    setRequests(groupedData);
+  }, [data]);
+
+  async function updateStatus(from: DraggableLocation, to: DraggableLocation) {
+    try {
+      // remove from source list
+      // @ts-ignore
+      const sourceCopy = Array.from(requests[from.droppableId]) as RequestReturnType[];
+      const [removedItem] = sourceCopy.splice(from.index, 1);
+      // add to destination list
+      // @ts-ignore
+      const destinationCopy = Array.from(requests[to.droppableId]) as RequestReturnType[];
+      destinationCopy.splice(to.index, 0, { ...removedItem, status: to.droppableId });
+
+      setRequests({
+        ...requests,
+        [from.droppableId]: sourceCopy,
+        [to.droppableId]: destinationCopy,
+      });
+      updateRequestStatus(removedItem.id, to.droppableId); // update status on the db
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  }
+
   return (
-    <div className="grid grid-cols-3 gap-4 lg:gap-8">
-      <div>
-        <h2 className="font-bold">Planned ({props.planned?.length})</h2>
-        <p className="text-light text-sm">Ideas prioritized for research</p>
-        <ul className="space-y-4 lg:space-y-6 mt-6">
-          {props.planned?.map((feedback) => (
-            <li key={feedback.id}>
-              <RoadmapRequestCard request={feedback} />
-            </li>
-          ))}
-        </ul>
+    <DragDropContext
+      onDragEnd={(result) => {
+        const { source, destination } = result;
+        if (!destination?.droppableId) return; // type guard
+        if (destination?.droppableId !== source.droppableId) {
+          updateStatus(source, destination);
+        }
+      }}
+    >
+      <div className="grid grid-cols-3 gap-4 lg:gap-8">
+        <div>
+          <h2 className="font-bold">Planned ({planned?.length})</h2>
+          <p className="text-light text-sm">Ideas prioritized for research</p>
+          <Droppable droppableId="planned">
+            {({ droppableProps, innerRef, placeholder }) => (
+              <ul {...droppableProps} ref={innerRef} className="space-y-4 lg:space-y-6 mt-6">
+                {planned?.map((feedback, index) => (
+                  <Draggable draggableId={feedback.id} index={index} key={feedback.id}>
+                    {({ draggableProps, dragHandleProps, innerRef }) => (
+                      <li {...draggableProps} {...dragHandleProps} ref={innerRef}>
+                        <RoadmapRequestCard request={feedback} />
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
+                {placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </div>
+        <div>
+          <h2 className="font-bold">In-Progress ({inProgress?.length})</h2>
+          <p className="text-light text-sm">Currently being developed</p>
+          <Droppable droppableId="in-progress">
+            {({ droppableProps, innerRef, placeholder }) => (
+              <ul {...droppableProps} ref={innerRef} className="space-y-4 lg:space-y-6 mt-6">
+                {inProgress?.map((feedback, index) => (
+                  <Draggable draggableId={feedback.id} index={index} key={feedback.id}>
+                    {({ draggableProps, dragHandleProps, innerRef }) => (
+                      <li key={feedback.id} {...draggableProps} {...dragHandleProps} ref={innerRef}>
+                        <RoadmapRequestCard request={feedback} />
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
+                {placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </div>
+        <div>
+          <h2 className="font-bold">Live ({live?.length})</h2>
+          <p className="text-light text-sm">Released features</p>
+          <Droppable droppableId="live">
+            {({ droppableProps, innerRef, placeholder }) => (
+              <ul {...droppableProps} ref={innerRef} className="space-y-4 lg:space-y-6 mt-6">
+                {live?.map((feedback, index) => (
+                  <Draggable draggableId={feedback.id} index={index} key={feedback.id}>
+                    {({ draggableProps, dragHandleProps, innerRef }) => (
+                      <li key={feedback.id} {...draggableProps} {...dragHandleProps} ref={innerRef}>
+                        <RoadmapRequestCard request={feedback} />
+                      </li>
+                    )}
+                  </Draggable>
+                ))}
+                {placeholder}
+              </ul>
+            )}
+          </Droppable>
+        </div>
       </div>
-      <div>
-        <h2 className="font-bold">In-Progress ({props.inProgress?.length})</h2>
-        <p className="text-light text-sm">Currently being developed</p>
-        <ul className="space-y-4 lg:space-y-6 mt-6">
-          {props.inProgress?.map((feedback) => (
-            <li key={feedback.id}>
-              <RoadmapRequestCard request={feedback} />
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h2 className="font-bold">Live ({props.live?.length})</h2>
-        <p className="text-light text-sm">Released features</p>
-        <ul className="space-y-4 lg:space-y-6 mt-6">
-          {props.live?.map((feedback) => (
-            <li key={feedback.id}>
-              <RoadmapRequestCard request={feedback} />
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+    </DragDropContext>
   );
 }
