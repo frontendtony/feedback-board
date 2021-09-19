@@ -37,10 +37,14 @@ export default React.forwardRef<HTMLDivElement, { request: RequestReturnType }>(
 
         <div className="flex items-center justify-between mt-4 md:hidden">
           <Upvotes upvote={upvote} count={request.upvotes_count?.[0].count} />
-          <CommentCount count={request.comments_count?.[0].count ?? 0} />
+          <Link to={`/${request.id}#comments`}>
+            <CommentCount count={request.comments_count?.[0].count ?? 0} />
+          </Link>
         </div>
         <div className="hidden md:block ml-auto self-center">
-          <CommentCount count={request.comments_count?.[0].count ?? 0} />
+          <Link to={`/${request.id}#comments`}>
+            <CommentCount count={request.comments_count?.[0].count ?? 0} />
+          </Link>
         </div>
       </div>
     );
@@ -77,7 +81,9 @@ export function RoadmapRequestCard({ request }: { request: RequestReturnType }) 
 
       <div className="flex items-center justify-between mt-4">
         <Upvotes upvote={upvote} count={request.upvotes_count?.[0].count} />
-        <CommentCount count={request.comments_count?.[0].count ?? 0} />
+        <Link to={`/${request.id}#comments`}>
+          <CommentCount count={request.comments_count?.[0].count ?? 0} />
+        </Link>
       </div>
     </div>
   );
@@ -107,11 +113,11 @@ function Upvotes(props: {
 
 function CommentCount(props: { count: number }) {
   return (
-    <button className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2">
       <CommentBubble className="text-[#CDD2EE]" />
       <span className="font-bold text-small">
         {props.count} <span className="sr-only">comments</span>
       </span>
-    </button>
+    </div>
   );
 }
