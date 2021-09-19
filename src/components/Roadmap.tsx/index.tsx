@@ -2,7 +2,7 @@ import { Tab } from '@headlessui/react';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link, useHistory } from 'react-router-dom';
-import useSuggestions, { RequestReturnType } from 'src/data/useSuggestions';
+import useAcceptedRequests, { RequestReturnType } from 'src/data/useAcceptedRequests';
 import AngleLeft from '../../icons/AngleLeft';
 import { RoadmapRequestCard } from '../common/RequestCard';
 import Spinner from '../primitives/Spinner';
@@ -10,7 +10,7 @@ import Spinner from '../primitives/Spinner';
 export default function Roadmap() {
   const history = useHistory();
   const [selectedTab, setSelectedTab] = React.useState(0);
-  const { data, loading } = useSuggestions();
+  const { data, loading } = useAcceptedRequests();
 
   const requests = React.useMemo(
     () =>
