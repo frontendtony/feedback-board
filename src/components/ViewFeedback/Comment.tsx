@@ -1,6 +1,7 @@
 import React from 'react';
 import toast from 'react-hot-toast';
 import { RequestReturnType } from 'src/data/useRequest';
+import useUser from 'src/data/useUser';
 import supabase from 'src/utils/supabase';
 import { mutate } from 'swr';
 import Spinner from '../primitives/Spinner';
@@ -12,13 +13,15 @@ export default function Comment({ comment }: { comment: RequestReturnType['comme
   const [reply, setReply] = React.useState('');
   const [isSubmitting, setSubmitting] = React.useState(false);
 
+  const user = useUser();
+
   async function addComment() {
     try {
       setSubmitting(true);
       const { error } = await supabase.from('replies').insert([
         {
           comment_id: comment.id,
-          user_id: supabase.auth.user()?.id,
+          user_id: user?.id,
           content: reply,
         },
       ]);

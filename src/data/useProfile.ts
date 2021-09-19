@@ -2,7 +2,7 @@ import supabase from 'src/utils/supabase';
 import useSWR from 'swr';
 
 export default function useProfile() {
-  const { data, error, mutate } = useSWR('profile', fetchRequest);
+  const { data, error, mutate } = useSWR('profile', fetchProfile);
 
   return {
     data,
@@ -12,12 +12,13 @@ export default function useProfile() {
   };
 }
 
-async function fetchRequest() {
+async function fetchProfile() {
   const { data, error } = await supabase
     .from<App.Profile>('profiles')
     .select('*')
-    .eq('id', `${supabase.auth.session()?.user?.id}`);
+    .eq('id', `${supabase.auth.user()?.id}`)
+    .single();
 
   if (error) throw new Error(error.message);
-  return data?.[0];
+  return data;
 }

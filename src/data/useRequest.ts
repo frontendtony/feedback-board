@@ -25,8 +25,9 @@ async function fetchRequest(requestId: string) {
     .select(
       `*, comments(*, user:user_id(*), replies(*, user:user_id(*))), upvotes_count:upvotes(count)`
     )
-    .eq('id', requestId);
+    .eq('id', requestId)
+    .single();
 
   if (error) throw new Error(error.message);
-  return data?.[0];
+  return data;
 }

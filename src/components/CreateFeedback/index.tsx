@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useHistory } from 'react-router-dom';
+import useUser from 'src/data/useUser';
 import supabase from 'src/utils/supabase';
 import AngleLeft from '../../icons/AngleLeft';
 import Edit from '../../icons/Edit';
@@ -46,7 +47,7 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
     feedback ? statuses.find(({ value }) => value === feedback.status) ?? statuses[0] : statuses[0]
   );
 
-  const user = supabase.auth.session()?.user;
+  const user = useUser();
 
   async function createRequest({ title, description }: FormValues) {
     try {
