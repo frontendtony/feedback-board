@@ -152,7 +152,11 @@ export default function Header(props: {
         <div className="rounded p-6 bg-white">
           <div className="flex items-center justify-between">
             <p className="text-lg font-bold">Roadmap</p>
-            <Link to="/roadmap" className="text-alternate font-semibold text-small">
+            <Link
+              to="/roadmap"
+              className="text-alternate font-semibold text-small"
+              onClick={toggleMenu}
+            >
               View <span className="sr-only">Roadmap</span>
             </Link>
           </div>
