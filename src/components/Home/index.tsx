@@ -2,7 +2,7 @@ import { Transition } from '@headlessui/react';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import useRequests from 'src/data/useRequests';
+import useSuggestions from 'src/data/useSuggestions';
 import emptyImage from '../../assets/empty.png';
 import RequestCard from '../common/RequestCard';
 import Spinner from '../primitives/Spinner';
@@ -17,7 +17,7 @@ export default function Home() {
   const [selectedFilterOption, setSelectedFilterOption] = React.useState('All');
   const [selectedSortOption, setSelectedSortOption] = React.useState(sortOptions[0]);
 
-  const { data: requests, loading } = useRequests();
+  const { data: requests, loading } = useSuggestions();
 
   const filteredRequests = React.useMemo(() => {
     let result = requests;

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
-import { RequestReturnType } from 'src/data/useRequests';
+import { RequestReturnType } from 'src/data/useSuggestions';
 import { upvoteRequest } from 'src/utils/api';
 import { mutate } from 'swr';
 import AngleUp from '../../icons/AngleUp';

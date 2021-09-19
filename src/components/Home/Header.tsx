@@ -1,8 +1,8 @@
 import { Menu, RadioGroup, Transition } from '@headlessui/react';
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import useAcceptedRequests from 'src/data/useAcceptedRequests';
 import useProfile from 'src/data/useProfile';
-import useRequests from 'src/data/useRequests';
 import supabase from 'src/utils/supabase';
 import classes from './index.module.css';
 
@@ -16,9 +16,9 @@ export default function Header(props: {
   const history = useHistory();
 
   const { data: profile } = useProfile();
-  const { data: requests } = useRequests();
+  const { data: acceptedRequests } = useAcceptedRequests();
 
-  const stats = requests?.reduce(
+  const stats = acceptedRequests?.reduce(
     (acc, curr) => ({
       planned: acc.planned + (curr.status === 'planned' ? 1 : 0),
       inProgress: acc.inProgress + (curr.status === 'in-progress' ? 1 : 0),

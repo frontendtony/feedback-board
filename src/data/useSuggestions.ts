@@ -6,7 +6,7 @@ export interface RequestReturnType extends App.Request {
   upvotes_count: [{ count: number }];
 }
 
-export default function useRequests() {
+export default function useSuggestions() {
   const { data, error, mutate } = useSWR('requests', fetchRequests);
 
   return {
@@ -20,7 +20,8 @@ export default function useRequests() {
 async function fetchRequests() {
   const { data, error } = await supabase
     .from<RequestReturnType>('requests')
-    .select(`*, comments_count:comments(count), upvotes_count:upvotes(count)`);
+    .select(`*, comments_count:comments(count), upvotes_count:upvotes(count)`)
+    .eq('status', 'suggestion');
   if (error) throw new Error(error.message);
   return data;
 }
