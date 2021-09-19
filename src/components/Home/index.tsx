@@ -134,6 +134,9 @@ export default function Home() {
                 Got a suggestion? Found a bug that needs to be squashed? We love hearing about new
                 ideas to improve our app.
               </p>
+              <Link to="/new" className="btn primary mt-6">
+                + Add Feedback
+              </Link>
             </div>
           ) : (
             <div className="grid gap-3">
