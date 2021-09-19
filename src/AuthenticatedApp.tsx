@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { default as CreateFeedback, default as EditFeedback } from './components/CreateFeedback';
 import Home from './components/Home';
 import NotFound from './components/NotFound';
@@ -56,6 +56,9 @@ export default function AuthenticatedApp() {
               </PageTransition>
             );
           }}
+        </Route>
+        <Route exact path="/suggestions">
+          <Redirect to="/" />
         </Route>
         <Route path="*">
           <NotFound />
