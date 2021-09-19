@@ -120,7 +120,8 @@ export default function Auth() {
                 placeholder="person@example.com"
                 isInvalid={!!errors.email}
                 validationMessage={
-                  errors.email?.message || "It doesn't have to be your real email address"
+                  errors.email?.message ||
+                  (!isLogin ? "It doesn't have to be your real email address" : '')
                 }
                 {...register('email', {
                   required: 'Email is required',
