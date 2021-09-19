@@ -1,8 +1,9 @@
-import { RadioGroup } from '@headlessui/react';
+import { Menu, RadioGroup } from '@headlessui/react';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import useProfile from 'src/data/useProfile';
 import useRequests from 'src/data/useRequests';
+import supabase from 'src/utils/supabase';
 import classes from './index.module.css';
 
 export default function Header(props: {
@@ -12,6 +13,7 @@ export default function Header(props: {
   setSelectedFilterOption(value: string): void;
 }) {
   const { selectedFilterOption, setSelectedFilterOption, toggleMenu, isMenuVisible } = props;
+  const history = useHistory();
 
   const { data: profile } = useProfile();
   const { data: requests } = useRequests();
@@ -25,18 +27,54 @@ export default function Header(props: {
     { planned: 0, inProgress: 0, live: 0 }
   );
 
+  const logout = () => {
+    supabase.auth.signOut().then(() => history.push('/auth/login'));
+  };
+
   return (
     <div className={classes.header}>
       <div className={`${classes.nav} bg-primary`}>
         <div className="text-white text-left flex flex-grow flex-row-reverse md:flex-col justify-between mr-4">
           <div className="flex items-center space-x-2">
-            <img
-              src={`https://avatars.dicebear.com/api/avataaars/${profile?.id}.svg`}
-              alt={profile?.name}
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
+            <Menu as="div" className="relative inline-block text-left">
+              <Menu.Button className="">
+                <span className="sr-only"></span>
+                <img
+                  src={`https://avatars.dicebear.com/api/avataaars/${profile?.id}.svg`}
+                  alt={profile?.name}
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+              </Menu.Button>
+              <Menu.Items className="absolute z-10 top-12 mobile:right-0 md:left-0 overflow-auto bg-white rounded-md shadow-dropdown max-h-60 focus:outline-none divide-y divide-secondary divide-opacity-10 w-40">
+                <Menu.Item>
+                  <button
+                    className="w-full flex items-center space-x-2 px-3 py-3 text-danger hover:text-primary text-sm"
+                    onClick={logout}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="1em"
+                      width="1em"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      className="text-xl"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    <span>Sign Out</span>
+                  </button>
+                </Menu.Item>
+              </Menu.Items>
+            </Menu>
+
             <div className="hidden md:block">
               <p className="truncate leading-none">{profile?.name}</p>
               <p className="text-small leading-none font-semibold">@{profile?.username}</p>
