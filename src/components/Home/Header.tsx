@@ -1,4 +1,4 @@
-import { Menu, RadioGroup } from '@headlessui/react';
+import { Menu, RadioGroup, Transition } from '@headlessui/react';
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import useProfile from 'src/data/useProfile';
@@ -47,32 +47,42 @@ export default function Header(props: {
                   className="rounded-full"
                 />
               </Menu.Button>
-              <Menu.Items className="absolute z-10 top-12 mobile:right-0 md:left-0 overflow-auto bg-white rounded-md shadow-dropdown max-h-60 focus:outline-none divide-y divide-secondary divide-opacity-10 w-40">
-                <Menu.Item>
-                  <button
-                    className="w-full flex items-center space-x-2 px-3 py-3 text-danger hover:text-primary text-sm"
-                    onClick={logout}
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      height="1em"
-                      width="1em"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                      className="text-xl"
+              <Transition
+                as={React.Fragment}
+                enter="transition ease-out duration-100"
+                enterFrom="transform opacity-0 scale-95"
+                enterTo="transform opacity-100 scale-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="transform opacity-100 scale-100"
+                leaveTo="transform opacity-0 scale-95"
+              >
+                <Menu.Items className="absolute z-10 top-12 mobile:right-0 md:left-0 overflow-auto bg-white rounded-md shadow-dropdown max-h-60 focus:outline-none divide-y divide-secondary divide-opacity-10 w-40">
+                  <Menu.Item>
+                    <button
+                      className="w-full flex items-center space-x-2 px-3 py-3 text-danger hover:text-primary text-sm"
+                      onClick={logout}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                      />
-                    </svg>
-                    <span>Sign Out</span>
-                  </button>
-                </Menu.Item>
-              </Menu.Items>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        height="1em"
+                        width="1em"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        className="text-xl"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                        />
+                      </svg>
+                      <span>Sign Out</span>
+                    </button>
+                  </Menu.Item>
+                </Menu.Items>
+              </Transition>
             </Menu>
 
             <div className="hidden md:block">
