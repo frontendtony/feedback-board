@@ -1,3 +1,4 @@
+import { Transition } from '@headlessui/react';
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
@@ -136,8 +137,18 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid gap-3">
-              {filteredRequests?.map((request) => (
-                <RequestCard key={request.id} request={request} />
+              {filteredRequests?.map((request, index) => (
+                <Transition
+                  appear
+                  as="div"
+                  key={request.id}
+                  style={{ transitionDelay: `${100 * index}ms` }}
+                  enter="transition ease-out duration-100"
+                  enterFrom="transform opacity-0 translate-y-10"
+                  enterTo="transform opacity-100 translate-y-0"
+                >
+                  <RequestCard key={request.id} request={request} />
+                </Transition>
               ))}
             </div>
           )}

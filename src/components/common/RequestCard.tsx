@@ -7,42 +7,45 @@ import { mutate } from 'swr';
 import AngleUp from '../../icons/AngleUp';
 import CommentBubble from '../../icons/CommentBubble';
 
-export default function RequestCard({ request }: { request: RequestReturnType }) {
-  async function upvote() {
-    try {
-      await upvoteRequest(request.id);
-      toast.success('Request upvoted successfully');
-      mutate('requests');
-    } catch (error: any) {
-      toast.error(error.message);
+export default React.forwardRef<HTMLDivElement, { request: RequestReturnType }>(
+  function RequestCard({ request }, ref) {
+    async function upvote() {
+      try {
+        await upvoteRequest(request.id);
+        toast.success('Request upvoted successfully');
+        mutate('requests');
+      } catch (error: any) {
+        toast.error(error.message);
+      }
     }
+
+    return (
+      <div
+        key={request.id}
+        ref={ref}
+        className="rounded p-6 bg-white md:grid grid-cols-3 gap-10"
+        style={{ gridTemplateColumns: 'auto 1fr auto' }}
+      >
+        <div className="hidden md:block">
+          <Upvotes upvote={upvote} count={request.upvotes_count?.[0].count} direction="vertical" />
+        </div>
+        <Link to={`/${request.id}`}>
+          <p className="font-bold">{request.title}</p>
+          <p className="mt-2 text-light text-small">{request.description}</p>
+          <div className="request-label mt-3">{request.category}</div>
+        </Link>
+
+        <div className="flex items-center justify-between mt-4 md:hidden">
+          <Upvotes upvote={upvote} count={request.upvotes_count?.[0].count} />
+          <CommentCount count={request.comments_count?.[0].count ?? 0} />
+        </div>
+        <div className="hidden md:block ml-auto self-center">
+          <CommentCount count={request.comments_count?.[0].count ?? 0} />
+        </div>
+      </div>
+    );
   }
-
-  return (
-    <div
-      key={request.id}
-      className="rounded p-6 bg-white md:grid grid-cols-3 gap-10"
-      style={{ gridTemplateColumns: 'auto 1fr auto' }}
-    >
-      <div className="hidden md:block">
-        <Upvotes upvote={upvote} count={request.upvotes_count?.[0].count} direction="vertical" />
-      </div>
-      <Link to={`/${request.id}`}>
-        <p className="font-bold">{request.title}</p>
-        <p className="mt-2 text-light text-small">{request.description}</p>
-        <div className="request-label mt-3">{request.category}</div>
-      </Link>
-
-      <div className="flex items-center justify-between mt-4 md:hidden">
-        <Upvotes upvote={upvote} count={request.upvotes_count?.[0].count} />
-        <CommentCount count={request.comments_count?.[0].count ?? 0} />
-      </div>
-      <div className="hidden md:block ml-auto self-center">
-        <CommentCount count={request.comments_count?.[0].count ?? 0} />
-      </div>
-    </div>
-  );
-}
+);
 
 export function RoadmapRequestCard({ request }: { request: RequestReturnType }) {
   async function upvote() {
