@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet';
 import toast from 'react-hot-toast';
 import { useHistory, useParams } from 'react-router-dom';
 import useRequest from 'src/data/useRequest';
+import useUser from 'src/data/useUser';
 import supabase from 'src/utils/supabase';
 import { mutate } from 'swr';
 import AngleLeft from '../../icons/AngleLeft';
@@ -16,6 +17,7 @@ import RequestCard from './RequestCard';
 export default function ViewFeedback() {
   const history = useHistory();
   const params = useParams<{ id: string }>();
+  const user = useUser();
 
   const { data, loading } = useRequest(params.id);
   const [comment, setComment] = React.useState('');
@@ -52,13 +54,15 @@ export default function ViewFeedback() {
           <AngleLeft className="text-alternate" />
           <span className="font-bold text-small text-light">Go Back</span>
         </button>
-        <button
-          onClick={() => history.push({ pathname: `/${data?.id}/edit`, state: data })}
-          className="btn alternate"
-          disabled={!data}
-        >
-          Edit Feedback
-        </button>
+        {data?.user_id === user?.id && (
+          <button
+            onClick={() => history.push({ pathname: `/${data?.id}/edit`, state: data })}
+            className="btn alternate"
+            disabled={!data}
+          >
+            Edit Feedback
+          </button>
+        )}
       </div>
 
       {loading ? (
