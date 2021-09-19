@@ -2,13 +2,13 @@ import { User } from '@supabase/gotrue-js';
 import React, { Suspense, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
-import Auth from './components/Auth';
 import PageFallbackSpinner from './components/common/PageFallbackSpinner';
 import ReloadPrompt from './ServiceWorkerPrompt';
 import './styles/main.css';
 import supabase from './utils/supabase';
 
 const AuthenticatedApp = React.lazy(() => import('./AuthenticatedApp'));
+const Auth = React.lazy(() => import('./components/Auth'));
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -33,7 +33,7 @@ function App() {
   if (loading) return null;
 
   return (
-    <>
+    <Suspense fallback={<PageFallbackSpinner />}>
       <Toaster
         position="top-center"
         gutter={8}
@@ -68,21 +68,12 @@ function App() {
           <Route path="/auth">
             <Auth />
           </Route>
-          <Route>
-            {() =>
-              user ? (
-                <Suspense fallback={<PageFallbackSpinner />}>
-                  <AuthenticatedApp />
-                </Suspense>
-              ) : (
-                <Redirect to="/auth/login" />
-              )
-            }
-          </Route>
+          <Route>{() => (user ? <AuthenticatedApp /> : <Redirect to="/auth/login" />)}</Route>
         </Switch>
       </Router>
       <ReloadPrompt />
-    </>
+      <AuthenticatedApp />
+    </Suspense>
   );
 }
 
