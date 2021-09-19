@@ -3,7 +3,7 @@ import React, { Suspense, useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import Auth from './components/Auth';
-import Spinner from './components/primitives/Spinner';
+import PageFallbackSpinner from './components/common/PageFallbackSpinner';
 import ReloadPrompt from './ServiceWorkerPrompt';
 import './styles/main.css';
 import supabase from './utils/supabase';
@@ -71,13 +71,7 @@ function App() {
           <Route>
             {() =>
               user ? (
-                <Suspense
-                  fallback={
-                    <div className="h-screen w-screen flex items-center justify-center">
-                      <Spinner className="text-6xl text-primary" />
-                    </div>
-                  }
-                >
+                <Suspense fallback={<PageFallbackSpinner />}>
                   <AuthenticatedApp />
                 </Suspense>
               ) : (
