@@ -72,7 +72,6 @@ function App() {
         </Switch>
       </Router>
       <ReloadPrompt />
-      <AuthenticatedApp />
     </Suspense>
   );
 }
