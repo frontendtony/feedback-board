@@ -6,6 +6,11 @@ export interface RequestReturnType extends App.Request {
     App.Comment & { user: App.Profile } & { replies: Array<App.Reply & { user: App.Profile }> }
   >;
   upvotes_count: [{ count: number }];
+  user: {
+    id: string;
+    name: string;
+    username: string;
+  };
 }
 
 export default function useRequest(requestId: string) {
@@ -23,7 +28,7 @@ async function fetchRequest(requestId: string) {
   const { data, error } = await supabase
     .from<RequestReturnType>('requests')
     .select(
-      `*, comments(*, user:user_id(*), replies(*, user:user_id(*))), upvotes_count:upvotes(count)`
+      `*, user:user_id(*), comments(*, user:user_id(*), replies(*, user:user_id(*))), upvotes_count:upvotes(count)`
     )
     .eq('id', requestId)
     .single();

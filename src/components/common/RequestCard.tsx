@@ -1,3 +1,4 @@
+import { format } from 'date-fns';
 import * as React from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
@@ -30,8 +31,25 @@ export default React.forwardRef<HTMLDivElement, { request: RequestReturnType }>(
           <Upvotes upvote={upvote} count={request.upvotes_count?.[0].count} direction="vertical" />
         </div>
         <Link to={`/${request.id}`}>
-          <p className="font-bold">{request.title}</p>
-          <p className="mt-2 text-light text-small">{request.description}</p>
+          <div className="flex items-center">
+            <img
+              src={`https://avatars.dicebear.com/api/avataaars/${request.user_id}.svg`}
+              height={36}
+              width={36}
+              className="rounded-full overflow-hidden"
+              aria-hidden //
+            />
+            <div className="ml-2">
+              <p className="text-small font-bold">{request.user.name}</p>
+              {request.created_at && (
+                <p className="text-small text-light">
+                  {format(new Date(request.created_at), 'dd LLL, yyyy')}
+                </p>
+              )}
+            </div>
+          </div>
+          <p className="font-bold mt-2">{request.title}</p>
+          <p className="mt-1 text-light text-sm">{request.description}</p>
           <div className="request-label mt-3">{request.category}</div>
         </Link>
 
