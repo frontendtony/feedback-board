@@ -69,7 +69,7 @@ export default function Comment({ comment }: { comment: RequestReturnType['comme
           className="ml-auto text-alternate text-small font-semibold"
           onClick={() => toggleForm((state) => !state)}
         >
-          Reply
+          {showForm ? 'Cancel' : 'Reply'}
         </button>
       </div>
 
