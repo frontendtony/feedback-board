@@ -93,11 +93,11 @@ function Upvotes(props: { count: number; direction?: 'vertical' | 'horizontal' }
 
 function CommentCount(props: { count: number }) {
   return (
-    <button className="flex items-center space-x-2">
+    <div className="flex items-center space-x-2">
       <CommentBubble className="text-[#CDD2EE]" />
       <span className="font-bold text-small">
         {props.count} <span className="sr-only">comments</span>
       </span>
-    </button>
+    </div>
   );
 }

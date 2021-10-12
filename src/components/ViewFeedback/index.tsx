@@ -87,18 +87,6 @@ export default function ViewFeedback() {
               <RequestCard request={data} />
             </div>
 
-            <div className="mt-6 p-6 md:px-8 md:py-7 bg-white rounded">
-              <h3 className="text-lg font-bold" id="comments">
-                {data?.comments.length} Comment(s)
-              </h3>
-
-              <div className="mt-1 divide-y divide-light divide-opacity-25">
-                {data?.comments?.map((comment) => (
-                  <Comment key={comment.id} comment={comment} />
-                ))}
-              </div>
-            </div>
-
             <form
               className="mt-6 p-6 md:px-8 md:py-7 bg-white rounded"
               onSubmit={(e) => {
@@ -125,6 +113,18 @@ export default function ViewFeedback() {
                 </button>
               </div>
             </form>
+
+            <div className="mt-6 p-6 md:px-8 md:py-7 bg-white rounded">
+              <h3 className="text-lg font-bold" id="comments">
+                {data?.comments.length} Comment(s)
+              </h3>
+
+              <div className="mt-1 divide-y divide-light divide-opacity-25">
+                {data?.comments?.map((comment) => (
+                  <Comment key={comment.id} comment={comment} />
+                ))}
+              </div>
+            </div>
           </>
         )
       )}
