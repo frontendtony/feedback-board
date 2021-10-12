@@ -8,12 +8,12 @@ import supabase from 'src/utils/supabase';
 import { mutate } from 'swr';
 import emptyImage from '../../assets/empty.png';
 import AngleLeft from '../../icons/AngleLeft';
+import RequestCard from '../common/RequestCard';
 import Spinner from '../primitives/Spinner';
 import TextArea from '../primitives/TextArea';
 import Comment from './Comment';
 import './index.css';
 import classes from './index.module.css';
-import RequestCard from './RequestCard';
 
 export default function ViewFeedback() {
   const history = useHistory();

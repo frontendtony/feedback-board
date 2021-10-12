@@ -2,7 +2,7 @@ import useSWR from 'swr';
 import supabase from '../utils/supabase';
 
 export interface RequestReturnType extends App.Request {
-  comments_count: [{ count: number }];
+  comments_count?: [{ count: number }];
   upvotes_count: [{ count: number }];
   user: {
     id: string;
