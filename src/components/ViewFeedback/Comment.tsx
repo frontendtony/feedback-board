@@ -1,3 +1,5 @@
+import format from 'date-fns/format';
+import isThisYear from 'date-fns/isThisYear';
 import React from 'react';
 import toast from 'react-hot-toast';
 import { RequestReturnType } from 'src/data/useRequest';
@@ -42,13 +44,25 @@ export default function Comment({ comment }: { comment: RequestReturnType['comme
       <div className="flex items-center">
         <img
           src={`https://avatars.dicebear.com/api/avataaars/${comment.user_id}.svg`}
-          height={40}
-          width={40}
+          height={36}
+          width={36}
           className="rounded-full overflow-hidden"
           aria-hidden //
         />
-        <div className="ml-4">
-          <p className="text-small font-bold">{comment.user.name}</p>
+        <div className="ml-2">
+          <div className="flex space-x-2">
+            <p className="text-small font-bold">{comment.user.name}</p>
+            {comment.created_at && (
+              <p
+                className="text-small text-light"
+                title={format(new Date(comment.created_at), 'EEEE, d LLLL yyyy, HH:mm:ss')}
+              >
+                {format(new Date(comment.created_at), 'LLL dd')}
+                {!isThisYear(new Date(comment.created_at)) &&
+                  ` '${new Date(comment.created_at).getFullYear().toString().slice(2)}`}
+              </p>
+            )}
+          </div>
           <p className="text-small text-light">@{comment.user.username}</p>
         </div>
         <button
