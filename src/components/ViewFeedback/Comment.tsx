@@ -1,6 +1,6 @@
 import format from 'date-fns/format';
 import isThisYear from 'date-fns/isThisYear';
-import React from 'react';
+import React, { useRef } from 'react';
 import toast from 'react-hot-toast';
 import { RequestReturnType } from 'src/data/useRequest';
 import useUser from 'src/data/useUser';
@@ -15,7 +15,16 @@ export default function Comment({ comment }: { comment: RequestReturnType['comme
   const [reply, setReply] = React.useState('');
   const [isSubmitting, setSubmitting] = React.useState(false);
 
+  const replyButtonRef = useRef<HTMLButtonElement>(null);
+
   const user = useUser();
+
+  const openReplyForm = () => toggleForm(true);
+  const closeReplyForm = () => {
+    toggleForm(false);
+    // this gives react time to re-render and mount the button, otherwise it'll be null
+    setTimeout(() => replyButtonRef.current?.focus(), 10);
+  };
 
   async function addComment() {
     try {
@@ -65,39 +74,49 @@ export default function Comment({ comment }: { comment: RequestReturnType['comme
           </div>
           <p className="text-small text-light">@{comment.user.username}</p>
         </div>
-        <button
-          className="ml-auto text-alternate text-small font-semibold"
-          onClick={() => toggleForm((state) => !state)}
-        >
-          {showForm ? 'Cancel' : 'Reply'}
-        </button>
       </div>
 
       <p className="mt-4 text-light text-small md:text-regular">{comment.content}</p>
 
-      {showForm && (
+      {showForm ? (
         <form
-          className="mt-6 mobile:space-y-6 md:flex md:space-x-6 bg-white rounded"
+          className="mt-6 bg-white rounded"
           onSubmit={(e) => {
             e.preventDefault();
             addComment();
           }}
         >
-          <div className="flex-grow">
-            <TextArea
-              id={`reply-to-${comment.id}`}
-              autoFocus
-              className="mt-0"
-              value={reply}
-              onChange={(e) => setReply(e.currentTarget.value)}
+          <TextArea
+            id={`reply-to-${comment.id}`}
+            autoFocus
+            className="mt-0"
+            value={reply}
+            onChange={(e) => setReply(e.currentTarget.value)}
+            disabled={isSubmitting}
+          />
+          <span className="text-light text-small">{250 - reply.length} Characters left</span>
+          <div className="mt-2 flex space-x-2">
+            <button className="btn primary" disabled={reply.length === 0 || isSubmitting}>
+              {isSubmitting ? <Spinner className="text-2xl" /> : 'Post Reply'}
+            </button>
+            <button
+              className="btn secondary"
+              type="button"
               disabled={isSubmitting}
-            />
-            <span className="text-light">{250 - reply.length} Characters left</span>
+              onClick={closeReplyForm}
+            >
+              Cancel
+            </button>
           </div>
-          <button className="btn primary" disabled={reply.length === 0 || isSubmitting}>
-            {isSubmitting ? <Spinner className="text-2xl" /> : 'Post Reply'}
-          </button>
         </form>
+      ) : (
+        <button
+          className="text-alternate text-small font-medium mt-4"
+          onClick={openReplyForm}
+          ref={replyButtonRef}
+        >
+          {showForm ? 'Cancel' : 'Reply'}
+        </button>
       )}
 
       {comment.replies && (
