@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import * as React from 'react';
 import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
+import { RequestReturnType as RoadmapRequestReturnType } from 'src/data/useAcceptedRequests';
 import { RequestReturnType } from 'src/data/useSuggestions';
 import { upvoteRequest } from 'src/utils/api';
 import { mutate } from 'swr';
@@ -69,7 +70,7 @@ export default React.forwardRef<HTMLDivElement, { request: RequestReturnType }>(
   }
 );
 
-export function RoadmapRequestCard({ request }: { request: RequestReturnType }) {
+export function RoadmapRequestCard({ request }: { request: RoadmapRequestReturnType }) {
   async function upvote() {
     try {
       await upvoteRequest(request.id);
