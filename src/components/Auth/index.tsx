@@ -30,6 +30,7 @@ export default function Auth() {
             className={`grid grid-cols-2 before:h-1 before:bg-primary before:w-1/2 pb-5 mt-10 ${
               !isLogin ? 'before:translate-x-full' : ''
             } relative before:absolute before:bottom-0 before:transition-transform -scale-x-90 border-b border-light border-opacity-40`}
+            role="tablist"
           >
             <button
               onClick={() => history.replace(`${url}/login`)}
