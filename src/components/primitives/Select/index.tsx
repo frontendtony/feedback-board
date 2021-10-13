@@ -23,13 +23,18 @@ export default function Select(props: SelectProps) {
       <label htmlFor={props.id} className="font-bold text-sm">
         {props.label}
       </label>
-      {props.hint && <p className="mt-[.125rem]">{props.hint}</p>}
+      {props.hint && (
+        <p className="mt-[.125rem]" id={`helper-text-for-${props.id}`}>
+          {props.hint}
+        </p>
+      )}
       <Listbox value={value} onChange={onChange}>
         <div className="relative flex items-center mt-4">
           <Listbox.Button
             className="select mt-0 flex items-center justify-between"
             id={props.id}
             aria-invalid={props.isInvalid}
+            aria-describedby={`helper-text-for-${props.id}`}
           >
             {value.label}
             <AngleDown className="text-xs" />
@@ -65,7 +70,9 @@ export default function Select(props: SelectProps) {
         </div>
       </Listbox>
       {props.isInvalid && props.validationMessage && (
-        <p className="text-danger text-sm mt-2">{props.validationMessage}</p>
+        <p className="text-danger text-sm mt-2" aria-live="assertive">
+          {props.validationMessage}
+        </p>
       )}
     </div>
   );

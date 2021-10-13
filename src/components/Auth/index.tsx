@@ -1,79 +1,26 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
-import { Link, useHistory, useRouteMatch } from 'react-router-dom';
-import supabase from '../../utils/supabase';
-import Spinner from '../primitives/Spinner';
-import TextInput from '../primitives/TextInput';
-
-type FormValues = { name: string; email: string; password: string };
+import { useHistory, useRouteMatch } from 'react-router-dom';
+import LoginForm from './LoginForm';
+import SignUpForm from './SignUpForm';
 
 export default function Auth() {
   const history = useHistory();
   let { url } = useRouteMatch();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>();
-
-  const [isSubmitting, setSubmitting] = React.useState(false);
-
   const isLogin = history.location.pathname !== '/auth/sign-up';
 
-  async function signIn(values: FormValues) {
-    try {
-      setSubmitting(true);
-      const { error } = await supabase.auth.signIn({
-        email: values.email,
-        password: values.password,
-      });
-      if (error) throw new Error(error.message);
-      history.replace('/');
-    } catch (e: any) {
-      setSubmitting(false);
-      toast.error(e.message);
-    }
-  }
-
-  async function signUp(values: FormValues) {
-    try {
-      setSubmitting(true);
-      const { user, error: signUpError } = await supabase.auth.signUp({
-        email: values.email,
-        password: values.password,
-      });
-      if (signUpError) throw new Error(signUpError.message);
-      const { error: createProfileError } = await supabase
-        .from('profiles')
-        .insert([{ id: user?.id, name: values.name, username: user?.email?.split('@')[0] }], {
-          returning: 'minimal',
-        });
-      if (createProfileError) {
-        await supabase.from('profiles').delete();
-        throw new Error(createProfileError.message);
-      }
-      toast.success('Account created successfully');
-      history.replace('/');
-    } catch (e: any) {
-      setSubmitting(false);
-      toast.error(e.message);
-    }
-  }
-
   return (
-    <div className="page-container flex items-start justify-center">
+    <>
       <Helmet>
         <title>
           {`${location.pathname === '/auth/login' ? 'Login' : 'Sign Up'}`} - Feedback Board
         </title>
       </Helmet>
-      <div className="bg-white rounded overflow-hidden mx-6 my-8 w-full max-w-md">
-        <div className="px-6 py-8 md:px-8 md:py-10 w-full max-w-md">
+      <main className="bg-white rounded overflow-hidden mx-6 xs:mx-auto my-8 max-w-md">
+        <div className="px-6 py-8 md:px-8 md:py-10">
           <img
-            src={`https://avatars.dicebear.com/api/avataaars/${new Date().toDateString()}.svg`}
+            src={`https://avatars.dicebear.com/api/avataaars/${new Date().toISOString()}.svg`}
             height={80}
             width={80}
             className="mx-auto rounded-full mt-8"
@@ -84,68 +31,39 @@ export default function Auth() {
               !isLogin ? 'before:translate-x-full' : ''
             } relative before:absolute before:bottom-0 before:transition-transform -scale-x-90 border-b border-light border-opacity-40`}
           >
-            <Link
-              to={`${url}/login`}
+            <button
+              onClick={() => history.replace(`${url}/login`)}
               className={`w-full text-center ${isLogin ? 'font-bold' : ''}`}
+              role="tab"
+              id="login-tab"
+              aria-controls="login-tabpanel"
+              aria-selected={isLogin}
             >
               Login
-            </Link>
-            <Link
-              to={`${url}/sign-up`}
+            </button>
+            <button
+              onClick={() => history.replace(`${url}/sign-up`)}
               className={`w-full text-center ${!isLogin ? 'font-bold' : ''}`}
+              role="tab"
+              id="signup-tab"
+              aria-controls="signup-tabpanel"
+              aria-selected={!isLogin}
             >
               Sign Up
-            </Link>
-          </div>
-          <form onSubmit={handleSubmit(isLogin ? signIn : signUp)}>
-            <div className="space-y-4 mt-10">
-              {!isLogin && (
-                <TextInput
-                  id="name"
-                  label="Full Name"
-                  placeholder="John Doe"
-                  isInvalid={!!errors.name}
-                  validationMessage={errors.name?.message}
-                  {...register('name', {
-                    required: 'Name is required',
-                    min: { value: 2, message: 'Enter at least 2 characters' },
-                    maxLength: { value: 100, message: 'Nobody has a name that long' },
-                  })}
-                />
-              )}
-              <TextInput
-                id="email"
-                label="Email"
-                type="email"
-                placeholder="person@example.com"
-                isInvalid={!!errors.email}
-                validationMessage={
-                  errors.email?.message ||
-                  (!isLogin ? "It doesn't have to be your real email address" : '')
-                }
-                {...register('email', {
-                  required: 'Email is required',
-                  pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' },
-                })}
-              />
-              <TextInput
-                id="password"
-                type="password"
-                label="Password"
-                isInvalid={!!errors.password}
-                validationMessage={errors.password?.message}
-                {...register('password', {
-                  required: 'Password is required',
-                  min: { value: 6, message: 'Password is too short' },
-                })}
-              />
-            </div>
-            <button className="btn primary w-full h-12 mt-8" type="submit" disabled={isSubmitting}>
-              {isSubmitting ? <Spinner className="text-2xl" /> : isLogin ? 'Login' : 'Sign Up'}
             </button>
-          </form>
+          </div>
+          <h1 className="sr-only">{isLogin ? 'Login' : 'Sign up'}</h1>
+          {isLogin ? (
+            <div role="tabpanel" id="login-tabpanel">
+              <LoginForm />
+            </div>
+          ) : (
+            <div role="tabpanel" id="signup-tabpanel">
+              <SignUpForm />
+            </div>
+          )}
         </div>
-      </div>
-    </div>
+      </main>
+    </>
   );
 }

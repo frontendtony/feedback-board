@@ -30,7 +30,6 @@
   }
 
   .page-container {
-    width: 100vw;
     min-height: 100vh;
     max-width: 1024px;
     margin: 0 auto;

@@ -23,9 +23,23 @@ export default React.forwardRef<HTMLTextAreaElement, TextAreaInputProps>(functio
       <label htmlFor={id} className="font-bold text-sm">
         {label}
       </label>
-      {props.hint && <p className="mt-[.125rem]">{hint}</p>}
-      <textarea {...rest} id={id} aria-invalid={isInvalid} ref={ref} />
-      {isInvalid && validationMessage && <p className="text-danger text-sm">{validationMessage}</p>}
+      {props.hint && (
+        <p className="mt-[.125rem]" id={`helper-text-for-${id}`}>
+          {hint}
+        </p>
+      )}
+      <textarea
+        {...rest}
+        id={id}
+        aria-invalid={isInvalid}
+        aria-describedby={`helper-text-for-${id}`}
+        ref={ref}
+      />
+      {isInvalid && validationMessage && (
+        <p className="text-danger text-sm" aria-live="assertive">
+          {validationMessage}
+        </p>
+      )}
     </div>
   );
 });

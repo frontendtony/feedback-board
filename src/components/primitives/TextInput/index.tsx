@@ -16,10 +16,24 @@ export default React.forwardRef<HTMLInputElement, TextInputProps>(function TextI
       <label htmlFor={props.id} className="font-bold text-sm">
         {props.label}
       </label>
-      {props.hint && <p className="mt-[.125rem]">{props.hint}</p>}
-      <input id={id} type="text" {...rest} aria-invalid={props.isInvalid} ref={ref} />
+      {props.hint && (
+        <p className="mt-[.125rem]" id={`helper-text-for-${id}`}>
+          {props.hint}
+        </p>
+      )}
+      <input
+        id={id}
+        type="text"
+        {...rest}
+        aria-invalid={props.isInvalid}
+        ref={ref}
+        aria-describedby={`helper-text-for-${id}`}
+      />
       {props.validationMessage && (
-        <p className={`${props.isInvalid ? 'text-danger' : 'text-light'} text-sm mt-2`}>
+        <p
+          className={`${props.isInvalid ? 'text-danger' : 'text-light'} text-sm mt-2`}
+          aria-live="assertive"
+        >
           {props.validationMessage}
         </p>
       )}
