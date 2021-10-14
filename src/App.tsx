@@ -75,7 +75,6 @@ function App() {
           <Route path="/auth">
             <Auth />
           </Route>
-          {/* <Route>{() => (user ? <AuthenticatedApp /> : <Redirect to="/auth/login" />)}</Route> */}
           <Route exact path="/new">
             {({ location, history }) => {
               return (
