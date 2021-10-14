@@ -100,11 +100,7 @@ export default function Header(props: {
               </div>
             </div>
           ) : (
-            <Link
-              to="/auth/login"
-              className="flex items-center space-x-2"
-              onClick={props.toggleMenu}
-            >
+            <Link to="/auth/login" className="flex items-center space-x-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
