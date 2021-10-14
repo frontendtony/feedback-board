@@ -2,7 +2,7 @@ import supabase from 'src/utils/supabase';
 import useSWR from 'swr';
 
 export default function useProfile() {
-  const { data, error, mutate } = useSWR('profile', fetchProfile);
+  const { data, error, mutate } = useSWR(supabase.auth.session() ? 'profile' : null, fetchProfile);
 
   return {
     data,

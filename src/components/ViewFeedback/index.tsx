@@ -100,17 +100,28 @@ export default function ViewFeedback() {
                 onChange={(e) => setComment(e.target.value)}
                 id="new-comment"
                 className="mt-6"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !user}
               />
               <div className="flex items-center justify-between mt-4">
-                <span className="text-light">{250 - comment.length} Characters left</span>
-                <button
-                  className="btn primary"
-                  type="submit"
-                  disabled={isSubmitting || comment.length === 0}
-                >
-                  {isSubmitting ? <Spinner className="text-2xl" /> : 'Post Comment'}
-                </button>
+                {user ? (
+                  <>
+                    <span className="text-light">{250 - comment.length} Characters left</span>
+                    <button
+                      className="btn primary"
+                      type="submit"
+                      disabled={isSubmitting || comment.length === 0}
+                    >
+                      {isSubmitting ? <Spinner className="text-2xl" /> : 'Post Comment'}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p>Login to comment</p>
+                    <Link to="/auth/login" className="btn primary">
+                      Login
+                    </Link>
+                  </>
+                )}
               </div>
             </form>
 

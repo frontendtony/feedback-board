@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet';
 import toast from 'react-hot-toast';
 import { Link, useHistory } from 'react-router-dom';
 import useAcceptedRequests, { RequestReturnType } from 'src/data/useAcceptedRequests';
+import useUser from 'src/data/useUser';
 import { updateRequestStatus } from 'src/utils/api';
 import AngleLeft from '../../icons/AngleLeft';
 import { RoadmapRequestCard } from '../common/RequestCard';
@@ -142,6 +143,8 @@ function KanbanBoard() {
     'in-progress': [],
     live: [],
   });
+  const user = useUser();
+
   const { data, groupedData } = useAcceptedRequests();
   const { planned, ['in-progress']: inProgress, live } = requests;
 
@@ -151,6 +154,7 @@ function KanbanBoard() {
 
   async function updateStatus(from: DraggableLocation, to: DraggableLocation) {
     try {
+      if (!user) throw new Error('You need to be logged to perform this action');
       // remove from source list
       // @ts-ignore
       const sourceCopy = Array.from(requests[from.droppableId]) as RequestReturnType[];

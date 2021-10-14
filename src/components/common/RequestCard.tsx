@@ -4,6 +4,7 @@ import toast from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 import { RequestReturnType as RoadmapRequestReturnType } from 'src/data/useAcceptedRequests';
 import { RequestReturnType } from 'src/data/useSuggestions';
+import useUser from 'src/data/useUser';
 import { upvoteRequest } from 'src/utils/api';
 import { mutate } from 'swr';
 import AngleUp from '../../icons/AngleUp';
@@ -11,8 +12,11 @@ import CommentBubble from '../../icons/CommentBubble';
 
 export default React.forwardRef<HTMLDivElement, { request: RequestReturnType }>(
   function RequestCard({ request }, ref) {
+    const user = useUser();
+
     async function upvote() {
       try {
+        if (!user) throw new Error('You need to be logged in to upvote a request');
         await upvoteRequest(request.id);
         toast.success('Request upvoted successfully');
         mutate('requests');
@@ -71,8 +75,11 @@ export default React.forwardRef<HTMLDivElement, { request: RequestReturnType }>(
 );
 
 export function RoadmapRequestCard({ request }: { request: RoadmapRequestReturnType }) {
+  const user = useUser();
+
   async function upvote() {
     try {
+      if (!user) throw new Error('You need to be logged in to upvote a request');
       await upvoteRequest(request.id);
       toast.success('Request upvoted successfully');
       mutate('requests');

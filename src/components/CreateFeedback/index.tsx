@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Helmet } from 'react-helmet';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
+import { Redirect } from 'react-router';
 import { useHistory } from 'react-router-dom';
 import useUser from 'src/data/useUser';
 import supabase from 'src/utils/supabase';
@@ -102,6 +103,8 @@ export default function CreateFeedback({ feedback }: { feedback?: App.Request })
       toast.error(error.message);
     }
   }
+
+  if (!user) return <Redirect to="/auth/login" />;
 
   return (
     <main className={`page-container px-6 py-8 md:py-14 ${classes.pageContainer}`}>

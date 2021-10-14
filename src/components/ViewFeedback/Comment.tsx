@@ -78,45 +78,49 @@ export default function Comment({ comment }: { comment: RequestReturnType['comme
 
       <p className="mt-4 text-light text-small md:text-regular">{comment.content}</p>
 
-      {showForm ? (
-        <form
-          className="mt-6 bg-white rounded"
-          onSubmit={(e) => {
-            e.preventDefault();
-            addComment();
-          }}
-        >
-          <TextArea
-            id={`reply-to-${comment.id}`}
-            autoFocus
-            className="mt-0"
-            value={reply}
-            onChange={(e) => setReply(e.currentTarget.value)}
-            disabled={isSubmitting}
-          />
-          <span className="text-light text-small">{250 - reply.length} Characters left</span>
-          <div className="mt-2 flex space-x-2">
-            <button className="btn primary" disabled={reply.length === 0 || isSubmitting}>
-              {isSubmitting ? <Spinner className="text-2xl" /> : 'Post Reply'}
-            </button>
-            <button
-              className="btn secondary"
-              type="button"
-              disabled={isSubmitting}
-              onClick={closeReplyForm}
+      {user && (
+        <>
+          {showForm ? (
+            <form
+              className="mt-6 bg-white rounded"
+              onSubmit={(e) => {
+                e.preventDefault();
+                addComment();
+              }}
             >
-              Cancel
+              <TextArea
+                id={`reply-to-${comment.id}`}
+                autoFocus
+                className="mt-0"
+                value={reply}
+                onChange={(e) => setReply(e.currentTarget.value)}
+                disabled={isSubmitting}
+              />
+              <span className="text-light text-small">{250 - reply.length} Characters left</span>
+              <div className="mt-2 flex space-x-2">
+                <button className="btn primary" disabled={reply.length === 0 || isSubmitting}>
+                  {isSubmitting ? <Spinner className="text-2xl" /> : 'Post Reply'}
+                </button>
+                <button
+                  className="btn secondary"
+                  type="button"
+                  disabled={isSubmitting}
+                  onClick={closeReplyForm}
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          ) : (
+            <button
+              className="text-alternate text-small font-medium mt-4"
+              onClick={openReplyForm}
+              ref={replyButtonRef}
+            >
+              Reply
             </button>
-          </div>
-        </form>
-      ) : (
-        <button
-          className="text-alternate text-small font-medium mt-4"
-          onClick={openReplyForm}
-          ref={replyButtonRef}
-        >
-          {showForm ? 'Cancel' : 'Reply'}
-        </button>
+          )}
+        </>
       )}
 
       {comment.replies && (
