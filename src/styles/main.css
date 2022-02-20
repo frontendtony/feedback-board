@@ -10,7 +10,7 @@
     font-family: 'Jost', sans-serif, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    @apply bg-background min-h-screen text-default;
+    @apply bg-background min-h-screen text-default break-all;
   }
 
   ::selection {
