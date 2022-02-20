@@ -54,7 +54,7 @@ export default React.forwardRef<HTMLDivElement, { request: RequestReturnType }>(
             </div>
           </div>
           <p className="font-bold mt-2">{request.title}</p>
-          <p className="mt-1 text-light text-sm">{request.description}</p>
+          <p className="mt-1 text-light text-sm break-all">{request.description}</p>
           <div className="request-label mt-3">{request.category}</div>
         </Link>
 
