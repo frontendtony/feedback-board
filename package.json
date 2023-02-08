@@ -6,7 +6,7 @@
     "build": "tsc && vite build",
     "serve": "vite preview",
     "https-preview": "serve dist",
-    "start": "npm run build && npm run serve"
+    "start": "npm run serve"
   },
   "dependencies": {
     "@headlessui/react": "^1.4.1",
